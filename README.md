@@ -1,7 +1,7 @@
 # Scientific Agent Skills
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-[![Version](https://img.shields.io/badge/Version-2.54.0-blue.svg)](pyproject.toml)
+[![Version](https://img.shields.io/badge/Version-2.55.0-blue.svg)](pyproject.toml)
 [![Skills](https://img.shields.io/badge/Skills-150-brightgreen.svg)](#-whats-included)
 [![Databases](https://img.shields.io/badge/Databases-100%2B-orange.svg)](#-whats-included)
 [![Agent Skills](https://img.shields.io/badge/Standard-Agent_Skills-blueviolet.svg)](https://agentskills.io/)
