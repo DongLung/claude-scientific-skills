@@ -394,4 +394,3 @@ def contrast_ratio(first: str, second: str) -> float:
     lighter = max(first_luminance, second_luminance)
     darker = min(first_luminance, second_luminance)
     return (lighter + 0.05) / (darker + 0.05)
-

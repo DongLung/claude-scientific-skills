@@ -1316,4 +1316,3 @@ def load_and_validate_manifest(
         enforce_contrast=enforce_contrast,
     )
     return path, document, report
-

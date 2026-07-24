@@ -1,8 +1,8 @@
 # Official Source Ledger
 
-**Research date:** 2026-07-23  
+**Research date:** 2026-07-23
 **Method:** targeted `parallel-cli search` and `parallel-cli extract`, restricted to
-official publishers and regulator/program sites.  
+official publishers and regulator/program sites.
 **Purpose:** version baseline for this skill; not legal advice, an applicability
 decision, certification criteria, or a substitute for controlled source copies.
 

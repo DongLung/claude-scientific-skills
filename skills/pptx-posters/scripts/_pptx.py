@@ -1482,4 +1482,3 @@ def patch_accessibility_metadata(
             "could not apply alt text exactly once for shape(s): "
             + ", ".join(sorted(missing))
         )
-

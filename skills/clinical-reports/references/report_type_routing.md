@@ -4,25 +4,25 @@ Select one route before opening a template. Do not merge routes merely because a
 
 ## Decision sequence
 
-1. Is the artifact a patient-care record?  
+1. Is the artifact a patient-care record?
    Stop. This skill does not create SOAP notes, H&Ps, consultation notes, discharge summaries, prescriptions, orders, triage instructions, or signed diagnostic reports.
-2. Is it a single clinical case intended for publication?  
+2. Is it a single clinical case intended for publication?
    Use CARE.
-3. Is it a diagnostic-report scaffold controlled by a clinical service?  
+3. Is it a diagnostic-report scaffold controlled by a clinical service?
    Use ACR, the current specimen-specific CAP protocol, or CLIA as applicable.
-4. Is it a randomized-trial protocol?  
+4. Is it a randomized-trial protocol?
    Use SPIRIT 2025 and applicable extensions.
-5. Is it a randomized-trial results manuscript?  
+5. Is it a randomized-trial results manuscript?
    Use CONSORT 2025 and applicable extensions.
-6. Is it an integrated report of one clinical study for regulatory review?  
+6. Is it an integrated report of one clinical study for regulatory review?
    Use ICH E3 plus E3 Q&A, with ICH E6(R3) and regional requirements as applicable.
-7. Is it individual pre-approval safety information?  
+7. Is it individual pre-approval safety information?
    Route to ICH E2A, E2B(R3), protocol/sponsor procedures, and regional requirements. Do not automate the reportability decision.
-8. Is it individual post-approval safety information?  
+8. Is it individual post-approval safety information?
    Route to ICH E2D(R1), E2B(R3), marketing-authorisation-holder procedures, and regional requirements. Do not automate.
-9. Is it an aggregate safety table?  
+9. Is it an aggregate safety table?
    Use the protocol/SAP, ICH E3, CONSORT Harms when applicable, and the relevant regional aggregate-analysis guidance.
-10. Is it an aggregate research summary?  
+10. Is it an aggregate research summary?
     Use the reporting guideline for the actual design and the verified protocol/SAP. Do not imply clinical applicability.
 
 ## Route matrix

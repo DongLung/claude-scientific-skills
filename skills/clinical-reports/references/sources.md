@@ -1,7 +1,7 @@
 # Official Source Ledger
 
-**Research cutoff and access date:** 2026-07-23  
-**Method:** targeted `parallel-cli search` restricted to official or primary-source domains, followed by review of returned primary-source excerpts.  
+**Research cutoff and access date:** 2026-07-23
+**Method:** targeted `parallel-cli search` restricted to official or primary-source domains, followed by review of returned primary-source excerpts.
 **Use:** source routing and version awareness only. Always verify the live source, jurisdictional adoption, and local requirements before real-world use.
 
 ## Case reports
