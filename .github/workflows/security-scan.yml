@@ -31,14 +31,33 @@ jobs:
           SKILL_SCANNER_LLM_MODEL: ${{ vars.SKILL_SCANNER_LLM_MODEL || 'claude-sonnet-5' }}
         run: uv run python scan_skills.py
 
-      - name: Commit updated SECURITY.md
+      # Gate: a scan that contradicts the contents of skills/ must not be
+      # published. A non-zero exit here fails the job, so the commit step below
+      # is skipped and the previous report stays in place.
+      - name: Validate scan report
+        run: uv run python validate_report.py
+
+      - name: Upload report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-report
+          path: |
+            docs/security-report.md
+            docs/security-report.json
+          if-no-files-found: warn
+
+      - name: Commit updated security report
         run: |
-          git diff --quiet SECURITY.md && exit 0
+          if [ -z "$(git status --porcelain docs/security-report.md docs/security-report.json)" ]; then
+            echo "Report unchanged; nothing to commit."
+            exit 0
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git stash --include-untracked
           git pull --rebase
           git stash pop || true
-          git add SECURITY.md
+          git add docs/security-report.md docs/security-report.json
           git commit -m "chore: update security scan report [skip ci]"
           git push

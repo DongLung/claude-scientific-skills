@@ -1,6 +1,15 @@
 #!/usr/bin/env python3
-"""Scan all skills for security issues and produce SECURITY.md."""
+"""Scan all skills for security issues and produce the security scan report.
 
+Writes a human-readable report plus a machine-readable companion. The JSON is
+what `validate_report.py` checks before CI is allowed to publish the report, so
+the two files must always be generated together.
+
+`SECURITY.md` is deliberately not written here: GitHub resolves that filename as
+the repository's official security policy, which is hand-authored.
+"""
+
+import json
 import os
 import time
 from datetime import datetime, timezone
@@ -20,7 +29,8 @@ from skill_scanner.core.scan_policy import ScanPolicy
 load_dotenv()
 
 SKILLS_DIR = "skills"
-OUTPUT_FILE = "SECURITY.md"
+OUTPUT_FILE = "docs/security-report.md"
+JSON_OUTPUT_FILE = "docs/security-report.json"
 
 
 def build_scanner() -> SkillScanner:
@@ -122,6 +132,66 @@ def generate_report(report) -> str:
     return "\n".join(lines)
 
 
+def _enum_value(value) -> str:
+    """Render an enum-or-string field as a plain string."""
+    return value.value if hasattr(value, "value") else str(value)
+
+
+def _finding_dict(finding) -> dict:
+    return {
+        "rule_id": finding.rule_id,
+        "severity": _enum_value(finding.severity),
+        "category": _enum_value(finding.category),
+        "title": finding.title,
+        "description": finding.description,
+        "file_path": finding.file_path,
+        "line_number": finding.line_number,
+        "remediation": finding.remediation,
+        "analyzer": finding.analyzer,
+    }
+
+
+def generate_json_report(report) -> dict:
+    """Build the machine-readable companion to the markdown report.
+
+    `validate_report.py` consumes this to sanity-check the scan before CI
+    publishes it, so every field it asserts on must be present here. The
+    per-skill `scan_metadata` and `analyzability_details` are included because
+    they carry the scanner's own view of each package, which is what makes
+    disagreements with the filesystem diagnosable.
+    """
+    return {
+        "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "totals": {
+            "skills_scanned": report.total_skills_scanned,
+            "findings": report.total_findings,
+            "critical": report.critical_count,
+            "high": report.high_count,
+            "medium": report.medium_count,
+            "low": report.low_count,
+            "info": report.info_count,
+            "safe_skills": report.safe_count,
+        },
+        "skills_skipped": report.skills_skipped,
+        "cross_skill_findings": [_finding_dict(f) for f in report.cross_skill_findings],
+        "skills": [
+            {
+                "name": result.skill_name,
+                "directory": result.skill_directory,
+                "is_safe": result.is_safe,
+                "max_severity": _enum_value(result.max_severity),
+                "scan_duration_seconds": round(result.scan_duration_seconds, 2),
+                "analyzers_used": result.analyzers_used,
+                "analyzers_failed": result.analyzers_failed,
+                "scan_metadata": result.scan_metadata,
+                "analyzability_details": result.analyzability_details,
+                "findings": [_finding_dict(f) for f in result.findings],
+            }
+            for result in report.scan_results
+        ],
+    }
+
+
 def scan_with_progress(scanner: SkillScanner, skills_dir: str) -> Report:
     """Run scan_directory logic with per-skill progress output."""
     base = Path(skills_dir)
@@ -214,10 +284,17 @@ def main():
     print(f"  Critical: {report.critical_count}  High: {report.high_count}  Safe: {report.safe_count}")
 
     md = generate_report(report)
+    Path(OUTPUT_FILE).parent.mkdir(parents=True, exist_ok=True)
     with open(OUTPUT_FILE, "w") as f:
         f.write(md)
 
+    with open(JSON_OUTPUT_FILE, "w") as f:
+        json.dump(generate_json_report(report), f, indent=2, sort_keys=False)
+        f.write("\n")
+
     print(f"\nReport written to {OUTPUT_FILE}")
+    print(f"Machine-readable report written to {JSON_OUTPUT_FILE}")
+    print("Run `python validate_report.py` before publishing.")
 
 
 if __name__ == "__main__":
