@@ -68,7 +68,9 @@ Skills execute code and influence your agent's behavior. Review what you install
 
 ## Automated skill scanning
 
-Every skill in this repository is scanned on a weekly schedule, and changed skills are scanned on pull requests, using [`cisco-ai-skill-scanner`](https://pypi.org/project/cisco-ai-skill-scanner/). The scan combines static behavioral analysis, trigger analysis, and LLM-assisted review.
+Skills in this repository are scanned using [`cisco-ai-skill-scanner`](https://pypi.org/project/cisco-ai-skill-scanner/), which combines static behavioral analysis, trigger analysis, and LLM-assisted review. Changed skills are scanned on every pull request.
+
+The scheduled scan runs weekly and is incremental: a skill whose package contents are unchanged since the last scan carries its previous findings forward rather than being rescanned. Every skill is rescanned in full whenever the scanner version or the model changes, when a maintainer triggers a full run, and at least every 30 days regardless. Each skill's `last_scanned` date is recorded in the JSON report, so you can always see when a given finding was actually produced.
 
 - **Report:** [`docs/security-report.md`](docs/security-report.md) (machine-readable companion: [`docs/security-report.json`](docs/security-report.json))
 - **Workflow:** [`.github/workflows/security-scan.yml`](.github/workflows/security-scan.yml)
