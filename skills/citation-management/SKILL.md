@@ -4,7 +4,7 @@ description: Comprehensive citation management for academic research. Search Goo
 allowed-tools: Read Write Edit Bash
 license: MIT License
 required_environment_variables: [{"name": "OPENROUTER_API_KEY", "prompt": "OpenRouter API key for LLM-powered citation steps.", "required_for": "optional features"}, {"name": "NCBI_EMAIL", "prompt": "Email for NCBI Entrez identification.", "required_for": "optional features"}, {"name": "NCBI_API_KEY", "prompt": "NCBI API key to raise Entrez rate limits.", "required_for": "optional features"}]
-metadata: {"version": "1.3", "skill-author": "K-Dense Inc.", "openclaw": {"primaryEnv": "OPENROUTER_API_KEY", "envVars": [{"name": "OPENROUTER_API_KEY", "required": false, "description": "OpenRouter API key for LLM-powered citation steps."}, {"name": "NCBI_EMAIL", "required": false, "description": "Email for NCBI Entrez identification."}, {"name": "NCBI_API_KEY", "required": false, "description": "NCBI API key to raise Entrez rate limits."}]}}
+metadata: {"version": "1.4", "skill-author": "K-Dense Inc.", "openclaw": {"primaryEnv": "OPENROUTER_API_KEY", "envVars": [{"name": "OPENROUTER_API_KEY", "required": false, "description": "OpenRouter API key for LLM-powered citation steps."}, {"name": "NCBI_EMAIL", "required": false, "description": "Email for NCBI Entrez identification."}, {"name": "NCBI_API_KEY", "required": false, "description": "NCBI API key to raise Entrez rate limits."}]}}
 ---
 
 # Citation Management
@@ -577,6 +577,36 @@ python scripts/format_bibtex.py my_review_references.bib \
   --style nature \
   --output formatted_refs.bib
 ```
+
+#### Integration with Zotero (pyzotero Skill)
+
+When the user already keeps references in Zotero, treat the Zotero library as the source of truth for the bibliography and use this skill for validation and formatting. The `pyzotero` skill covers the library side — reading items and collections, creating and updating references, uploading attachments, and exporting citations via the Zotero Web API v3.
+
+**Zotero Library (`pyzotero`)** → Library of record: storage, collections, tags, attachments
+**Citation Management Skill** → Metadata accuracy: validation, enrichment, style formatting
+
+**Combined Workflow**:
+1. Use `pyzotero` to pull the working set from the Zotero library, filtered by collection or tag
+2. Export it as BibTeX with `zot.add_parameters(format='bibtex')` (see `pyzotero` → `references/exports.md`)
+3. Use `citation-management` to validate the exported entries and repair incomplete metadata
+4. Use `citation-management` to format for the target venue
+5. Optionally use `pyzotero` to write corrected fields back so the library benefits from the fixes
+
+```bash
+# 1-2. Export the desired collection from Zotero as BibTeX (pyzotero skill)
+#      zot.add_parameters(format='bibtex'); bibtex = zot.collection_items(collection_id)
+#      → write to zotero_export.bib
+
+# 3. Validate the exported bibliography
+python scripts/validate_citations.py zotero_export.bib --report zotero_validation.json
+
+# 4. Format for the target venue
+python scripts/format_bibtex.py zotero_export.bib \
+  --style nature \
+  --output formatted_refs.bib
+```
+
+Zotero exports are only as good as what was captured — browser-connector entries in particular often carry missing DOIs, truncated author lists, or preprint metadata for papers since published. Run the validation step before submission rather than trusting the export, and prefer writing corrections back to Zotero so the same errors do not resurface in the next manuscript.
 
 ## Search Strategies
 
