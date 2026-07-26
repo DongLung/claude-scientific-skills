@@ -445,6 +445,9 @@ packages = ["pandas"]
 
 # --- genomics and sequence analysis ---------------------------------------
 
+[skills.genomic-coordinates]
+packages = []
+
 [skills.biopython]
 packages = ["biopython", "matplotlib", "numpy", "reportlab"]
 
