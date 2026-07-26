@@ -231,6 +231,32 @@ uv run --with pytest python tests/run_all.py
 `_common` to whichever skill imported first and silently tests the wrong files. `tests/conftest.py`
 refuses such a session; `tests/run_all.py` forks per skill.
 
+### One environment per skill
+
+The project environment deliberately does not carry the skills' scientific packages. Their upstream
+pins are mutually exclusive — `opentrons` needs `numpy<2`, `esm` caps `transformers` below the
+version the `transformers` skill targets, `geniml` and `spikeinterface` pin `zarr<3` against the
+`zarr-python` skill's 3.x, `bioservices` caps `lxml<6` against `matchms`, and `pytdc`, `molfeat`,
+`deepchem`, `histolab`, `vaex`, and `ete3` each need an interpreter older than 3.13. Installing them
+together forces every one of those skills to the losing side of a version fight.
+
+So `--isolated` builds a throwaway `uv` environment per skill instead, from
+[`tests/skill-requirements.toml`](tests/skill-requirements.toml):
+
+```bash
+python tests/run_all.py --isolated                 # every suite, one env each
+python tests/run_all.py --isolated scanpy qiskit   # just these
+```
+
+Each entry lists the packages that skill documents, plus an optional `python` when the skill cannot
+run on the default interpreter; uv downloads that interpreter on demand. Packages that cannot be
+installed at all — a GitHub-only SDK, a conda-forge-only library, a CUDA build — are recorded under
+`[unavailable]` with the reason, and the runner prints them so the gap shows up in test output.
+
+Adding a skill with `scripts/` means adding its `[skills.<name>]` entry. Use `packages = []` for
+skills whose bundled tooling is standard-library only; they still get a clean environment. uv caches
+wheels globally, so repeat runs create each environment in milliseconds.
+
 ## Before opening a PR
 
 - Directory name and frontmatter `name` match exactly.

@@ -282,7 +282,20 @@ uv run --with pytest python tests/run_all.py
 
 Each skill's suite must run in its own process. Skills' `scripts/` directories own plain top-level module names — 32 skills ship a `scripts/_common.py`, and names like `cluster.py` and `validate_manifest.py` recur — so collecting two skills into one interpreter would resolve those imports to whichever skill was imported first and silently test the wrong files. `tests/conftest.py` rejects a multi-skill session, and `tests/run_all.py` forks per skill.
 
-Four suites fail on this repository's default environment because their scientific dependencies are not installed (`exa-search`, `qutip`, `scikit-survival`, `simpy`). Install the pins named in the skill's `compatibility` field to run them.
+### One environment per skill
+
+Four suites fail on this repository's default environment because their scientific dependencies are not installed (`exa-search`, `qutip`, `scikit-survival`, `simpy`), and installing them all into one environment is not possible: the skills' upstream pins contradict each other. `opentrons` requires `numpy<2`; `esm` caps `transformers` below the release the `transformers` skill targets; `geniml` and `spikeinterface` pin `zarr<3` while the `zarr-python` skill targets 3.x; `bioservices` caps `lxml<6` while `matchms` requires 6.0.2+; and `pytdc`, `molfeat`, `deepchem`, `histolab`, `vaex`, and `ete3` each need an interpreter older than 3.13.
+
+`--isolated` therefore gives each skill its own throwaway `uv` environment, built from [`tests/skill-requirements.toml`](tests/skill-requirements.toml):
+
+```bash
+python tests/run_all.py --isolated                    # every suite, one env each
+python tests/run_all.py --isolated qutip exa-search   # just these
+```
+
+Nothing is installed into the project environment, so `uv sync` is unaffected. Each `[skills.<name>]` entry lists the packages that skill documents and, where needed, a `python` version for that skill alone — uv downloads the interpreter on demand. Packages that cannot be installed at all (a GitHub-only SDK, a conda-forge-only library, a CUDA build) are listed under `[unavailable]` with the reason, and the runner prints them so the gap appears in the test output.
+
+A new skill that ships `scripts/` needs a `[skills.<name>]` entry. Use `packages = []` when its bundled tooling is standard-library only — the skill still gets a clean environment with just pytest. uv caches wheels globally, so repeat runs create each environment in milliseconds.
 
 ## Pull Request Checklist
 
