@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Scan all skills for security issues and produce the security scan report.
 
-Writes a human-readable report plus a machine-readable companion. The JSON is
-what `validate_report.py` checks before CI is allowed to publish the report, so
-the two files must always be generated together.
+Writes a human-readable report plus a machine-readable companion. The two files
+must always be generated together: the markdown links into the JSON for
+per-skill scan dates, and the JSON is what the next run reads as its cache.
 
 `SECURITY.md` is deliberately not written here: GitHub resolves that filename as
 the repository's official security policy, which is hand-authored.
@@ -272,11 +272,9 @@ def generate_json_report(report, skill_meta: dict | None = None,
                          run_meta: dict | None = None) -> dict:
     """Build the machine-readable companion to the markdown report.
 
-    `validate_report.py` consumes this to sanity-check the scan before CI
-    publishes it, so every field it asserts on must be present here. The
-    per-skill `scan_metadata` and `analyzability_details` are included because
-    they carry the scanner's own view of each package, which is what makes
-    disagreements with the filesystem diagnosable.
+    The per-skill `scan_metadata` and `analyzability_details` are included
+    because they carry the scanner's own view of each package, which is what
+    lets a reviewer diagnose a finding that disagrees with the filesystem.
 
     Per-skill `content_hash` and `last_scanned` are what make incremental runs
     possible and honest: the hash decides whether a later run may reuse these
@@ -611,7 +609,6 @@ def main(argv=None):
 
     print(f"\nReport written to {OUTPUT_FILE}")
     print(f"Machine-readable report written to {JSON_OUTPUT_FILE}")
-    print("Run `python validate_report.py` before publishing.")
 
 
 if __name__ == "__main__":

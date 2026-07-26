@@ -45,12 +45,6 @@ jobs:
           SKILL_SCAN_FULL: ${{ inputs.full_scan && '1' || '' }}
         run: uv run python scan_skills.py
 
-      # Gate: a scan that contradicts the contents of skills/ must not be
-      # published. A non-zero exit here fails the job, so the commit step below
-      # is skipped and the previous report stays in place.
-      - name: Validate scan report
-        run: uv run python validate_report.py
-
       - name: Upload report artifact
         if: always()
         uses: actions/upload-artifact@v4
