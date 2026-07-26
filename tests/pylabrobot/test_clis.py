@@ -11,7 +11,9 @@ import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 
-SKILL_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[2]
+SKILL_ROOT = REPO_ROOT / "skills" / "pylabrobot"
+TESTS_DIR = Path(__file__).resolve().parent
 if str(SKILL_ROOT) not in sys.path:
   sys.path.insert(0, str(SKILL_ROOT))
 
@@ -27,7 +29,7 @@ from scripts import (  # noqa: E402
 class CliTests(unittest.TestCase):
   def setUp(self) -> None:
     self.previous_cwd = Path.cwd()
-    os.chdir(SKILL_ROOT)
+    os.chdir(REPO_ROOT)
 
   def tearDown(self) -> None:
     os.chdir(self.previous_cwd)
@@ -59,14 +61,14 @@ class CliTests(unittest.TestCase):
   def test_manifest_and_geometry_pass(self) -> None:
     code, stdout, stderr = self.run_main(
         validate_manifest.main,
-        ["--input", "tests/fixtures/protocol_manifest.json"],
+        ["--input", "tests/pylabrobot/fixtures/protocol_manifest.json"],
     )
     self.assertEqual((code, stderr), (0, ""))
     self.assertTrue(json.loads(stdout)["ok"])
 
     code, stdout, stderr = self.run_main(
         check_deck_geometry.main,
-        ["--input", "tests/fixtures/protocol_manifest.json"],
+        ["--input", "tests/pylabrobot/fixtures/protocol_manifest.json"],
     )
     self.assertEqual((code, stderr), (0, ""))
     self.assertTrue(json.loads(stdout)["ok"])
@@ -74,7 +76,7 @@ class CliTests(unittest.TestCase):
   def test_collision_fixture_is_rejected(self) -> None:
     code, stdout, stderr = self.run_main(
         check_deck_geometry.main,
-        ["--input", "tests/fixtures/collision_manifest.json"],
+        ["--input", "tests/pylabrobot/fixtures/collision_manifest.json"],
     )
     self.assertEqual(stderr, "")
     self.assertEqual(code, 3)
@@ -90,9 +92,9 @@ class CliTests(unittest.TestCase):
         plan_transfers.main,
         [
             "--manifest",
-            "tests/fixtures/protocol_manifest.json",
+            "tests/pylabrobot/fixtures/protocol_manifest.json",
             "--transfers",
-            "tests/fixtures/transfers.csv",
+            "tests/pylabrobot/fixtures/transfers.csv",
         ],
     )
     self.assertEqual((code, stderr), (0, ""))
@@ -116,9 +118,9 @@ class CliTests(unittest.TestCase):
         generate_simulation_plan.main,
         [
             "--manifest",
-            "tests/fixtures/protocol_manifest.json",
+            "tests/pylabrobot/fixtures/protocol_manifest.json",
             "--transfers",
-            "tests/fixtures/transfers.csv",
+            "tests/pylabrobot/fixtures/transfers.csv",
         ],
     )
     self.assertEqual((code, stderr), (0, ""))
@@ -130,10 +132,10 @@ class CliTests(unittest.TestCase):
     self.assertEqual(len(report["steps"]), 8)
 
   def test_duplicate_json_key_is_rejected(self) -> None:
-    with tempfile.TemporaryDirectory(dir=SKILL_ROOT / "tests") as directory:
+    with tempfile.TemporaryDirectory(dir=TESTS_DIR) as directory:
       path = Path(directory) / "duplicate.json"
       path.write_text('{"schema_version":"1.0","schema_version":"1.0"}', encoding="utf-8")
-      relative_path = path.relative_to(SKILL_ROOT)
+      relative_path = path.relative_to(REPO_ROOT)
       code, stdout, stderr = self.run_main(
           validate_manifest.main,
           ["--input", str(relative_path)],
@@ -144,7 +146,7 @@ class CliTests(unittest.TestCase):
   def test_parent_directory_traversal_is_rejected(self) -> None:
     code, stdout, stderr = self.run_main(
         validate_manifest.main,
-        ["--input", "tests/fixtures/../fixtures/protocol_manifest.json"],
+        ["--input", "tests/pylabrobot/fixtures/../fixtures/protocol_manifest.json"],
     )
     self.assertEqual((code, stdout), (2, ""))
     self.assertIn("traversal", json.loads(stderr)["message"])

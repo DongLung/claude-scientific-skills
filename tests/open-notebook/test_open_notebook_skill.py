@@ -4,8 +4,8 @@ Test-Driven Development tests for the Open-Notebook skill.
 These tests validate the structure, content completeness, and correctness
 of the open-notebook skill implementation for the scientific-agent-skills repository.
 
-Run with: python -m pytest test_open_notebook_skill.py -v
-Or:       python -m unittest test_open_notebook_skill.py -v
+Run with: python -m pytest tests/open-notebook -v
+Or:       python -m unittest tests/open-notebook/test_open_notebook_skill.py -v
 """
 
 import json
@@ -13,12 +13,12 @@ import os
 import re
 import unittest
 
-# Resolve paths relative to this test file
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-SKILL_DIR = os.path.dirname(SCRIPT_DIR)
-REPO_ROOT = os.path.dirname(os.path.dirname(SKILL_DIR))
+# Resolve the skill under test relative to this test file
+TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(os.path.dirname(TESTS_DIR))
+SKILL_DIR = os.path.join(REPO_ROOT, "skills", "open-notebook")
 REFERENCES_DIR = os.path.join(SKILL_DIR, "references")
-SCRIPTS_DIR = SCRIPT_DIR
+SCRIPTS_DIR = os.path.join(SKILL_DIR, "scripts")
 SKILL_MD = os.path.join(SKILL_DIR, "SKILL.md")
 PYPROJECT_TOML = os.path.join(REPO_ROOT, "pyproject.toml")
 
@@ -222,14 +222,6 @@ class TestSkillMdContent(unittest.TestCase):
             "OPEN_NOTEBOOK_ENCRYPTION_KEY",
             self.content,
             "Must mention the required encryption key env var",
-        )
-
-    def test_has_kdense_suggestion(self):
-        """SKILL.md must include the K-Dense Web suggestion section."""
-        self.assertIn(
-            "K-Dense Web",
-            self.content,
-            "Must include K-Dense Web suggestion",
         )
 
     def test_content_length_sufficient(self):

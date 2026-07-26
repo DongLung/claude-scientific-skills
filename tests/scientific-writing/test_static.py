@@ -10,7 +10,7 @@ import re
 import unittest
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2] / "skills" / "scientific-writing"
 REPO_ROOT = ROOT.parents[1]
 SCRIPT_DIR = ROOT / "scripts"
 

@@ -3,15 +3,16 @@
 Not part of the pytest suite — requires LM Studio running on localhost:1234
 with Gemma-4-31B-it loaded. Run manually:
 
-    pipenv run python skills/autoskill/tests/smoke_lmstudio.py
+    pipenv run python tests/autoskill/smoke_lmstudio.py
 """
 
 import json
 import sys
 from pathlib import Path
 
-THIS_DIR = Path(__file__).resolve().parent
-sys.path.insert(0, str(THIS_DIR.parent / "scripts"))
+REPO_ROOT = Path(__file__).resolve().parents[2]
+SKILL_ROOT = REPO_ROOT / "skills" / "autoskill"
+sys.path.insert(0, str(SKILL_ROOT / "scripts"))
 
 from backends import LocalBackend
 from match_skills import load_skill_descriptions, top_k_matches
@@ -21,7 +22,7 @@ from synthesize import synthesize
 def main() -> int:
     backend = LocalBackend(endpoint="http://localhost:1234/v1", model="gemma-4-31b-it")
 
-    repo_skills_dir = THIS_DIR.parent.parent
+    repo_skills_dir = REPO_ROOT / "skills"
     all_skills = load_skill_descriptions(repo_skills_dir)
     print(f"loaded {len(all_skills)} skills from {repo_skills_dir}")
 

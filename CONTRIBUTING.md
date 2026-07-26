@@ -7,6 +7,7 @@ Thanks for helping improve Scientific Agent Skills. This guide explains how to a
 - Add a new scientific package, database, platform, workflow, or research method skill.
 - Improve an existing skill with clearer instructions, current APIs, better examples, references, or scripts.
 - Fix outdated examples, broken install steps, security issues, or documentation gaps.
+- Add or extend a skill's tests under `tests/<skill-name>/` (see [Tests](#tests)).
 - Report bugs or request new skills through GitHub Issues.
 
 ## Skill Location
@@ -28,7 +29,11 @@ Only `SKILL.md` is required. Use optional directories when they make the skill e
 - `scripts/` for executable helpers, validators, or reusable workflow code.
 - `assets/` for templates, static resources, or example data.
 
+Those four are the only directories a skill may contain. Anything else — tests, fixtures, scratch data, generated output — belongs outside `skills/`.
+
 Keep references one level deep from `SKILL.md` where possible, and keep the main `SKILL.md` concise. The Agent Skills specification recommends keeping `SKILL.md` under 500 lines and using progressive disclosure for longer material.
+
+A skill directory holds only what an agent loads, so tests do not belong there. They live in the repository-level suite under `tests/<skill-name>/`, mirroring the skill directory name, with any fixtures in `tests/<skill-name>/fixtures/`. See [Tests](#tests).
 
 ## Required Skill Format
 
@@ -202,9 +207,17 @@ Good skills are specific, practical, and easy for an agent to apply.
 
 5. Test any commands, code examples, and scripts included in the skill.
 
-6. Update related documentation if the new skill changes repository-level lists, examples, or setup guidance.
+6. If the skill ships `scripts/`, add their tests in the repository-level suite, not in the skill directory:
 
-7. Run validation and security checks before opening a pull request.
+   ```text
+   tests/skill-name/
+   ```
+
+   See [Tests](#tests) for the layout, the path anchor to use, and how to run them.
+
+7. Update related documentation if the new skill changes repository-level lists, examples, or setup guidance.
+
+8. Run validation and security checks before opening a pull request.
 
 ## Updating an Existing Skill
 
@@ -213,7 +226,8 @@ Good skills are specific, practical, and easy for an agent to apply.
 3. Make the smallest useful change that fixes or improves the skill.
 4. Increment `metadata.version`.
 5. Test changed examples, commands, and scripts.
-6. Note any behavior changes in the pull request description.
+6. Run the skill's suite if it has one: `uv run --with pytest python -m pytest tests/skill-name -q`. Some suites assert the skill's exact version string, so a version bump can require a matching test edit.
+7. Note any behavior changes in the pull request description.
 
 ## Validation
 
@@ -238,11 +252,44 @@ skill-scanner scan ./skills/skill-name --use-behavioral
 
 A clean scan reduces review noise but does not replace manual review.
 
+## Tests
+
+**Tests never live under `skills/`.** A skill directory ships only what an agent loads, so tests go in the repository-level suite instead — one directory per skill, named exactly after the skill directory:
+
+```text
+tests/
+└── skill-name/          # matches skills/skill-name/
+    ├── test_scripts.py
+    └── fixtures/        # optional test data
+```
+
+A test reaches the skill it covers through an explicit anchor rather than a relative walk:
+
+```python
+SKILL_ROOT = Path(__file__).resolve().parents[2] / "skills" / "skill-name"
+```
+
+Anything the CLIs under test resolve relative to the working directory should be repo-root relative, since the suite runs from the repository root — `tests/skill-name/fixtures/manifest.json`, not `fixtures/manifest.json`.
+
+Run one skill's suite, or the whole tree:
+
+```bash
+uv run --with pytest python -m pytest tests/skill-name -q
+
+# every skill, in a separate process each
+uv run --with pytest python tests/run_all.py
+```
+
+Each skill's suite must run in its own process. Skills' `scripts/` directories own plain top-level module names — 32 skills ship a `scripts/_common.py`, and names like `cluster.py` and `validate_manifest.py` recur — so collecting two skills into one interpreter would resolve those imports to whichever skill was imported first and silently test the wrong files. `tests/conftest.py` rejects a multi-skill session, and `tests/run_all.py` forks per skill.
+
+Four suites fail on this repository's default environment because their scientific dependencies are not installed (`exa-search`, `qutip`, `scikit-survival`, `simpy`). Install the pins named in the skill's `compatibility` field to run them.
+
 ## Pull Request Checklist
 
 Before submitting a pull request, confirm:
 
 - The skill directory name and `name` frontmatter match exactly.
+- The skill directory contains only `SKILL.md`, `references/`, `scripts/`, and `assets/` — no `tests/` directory and no `test_*.py` files. Tests live in `tests/<skill-name>/`.
 - `SKILL.md` has valid YAML frontmatter and Markdown body content.
 - `uv run skills-ref validate ./skills/<name>` passes.
 - Only the six spec-defined top-level fields are present; anything else lives under `metadata`.

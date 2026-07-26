@@ -11,7 +11,7 @@ import unittest
 from pathlib import Path
 
 
-SKILL_ROOT = Path(__file__).resolve().parents[1]
+SKILL_ROOT = Path(__file__).resolve().parents[2] / "skills" / "exploratory-data-analysis"
 SCRIPTS = SKILL_ROOT / "scripts"
 REFERENCES = SKILL_ROOT / "references"
 PUBLIC_CLIS = (

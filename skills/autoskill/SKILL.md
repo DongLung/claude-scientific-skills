@@ -4,7 +4,7 @@ description: Observe the user's screen via screenpipe, detect repeated research 
 allowed-tools: Read Write Edit Bash
 license: MIT license
 metadata:
-  version: "1.1"
+  version: "1.2"
   skill-author: K-Dense Inc.
   openclaw:
     requires:
@@ -222,11 +222,10 @@ claude:
 
 ## Testing
 
-The skill is covered by a small pytest suite at `tests/`. Each script is unit-tested in isolation with dependency injection (mock HTTP transport, stub backend, stub embedder):
+The skill is covered by a small pytest suite at `tests/autoskill/` in the repository root. Each script is unit-tested in isolation with dependency injection (mock HTTP transport, stub backend, stub embedder):
 
 ```bash
-cd skills/autoskill
-python -m pytest tests/ -v
+python -m pytest tests/autoskill -v
 ```
 
 ## Composition with other skills in this repo

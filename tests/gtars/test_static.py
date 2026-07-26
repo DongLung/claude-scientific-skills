@@ -7,7 +7,7 @@ import unittest
 from pathlib import Path
 
 
-SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
+SCRIPTS = Path(__file__).resolve().parents[2] / "skills" / "gtars" / "scripts"
 
 
 def _word(*codepoints: int) -> str:

@@ -9,7 +9,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 
-SKILL_ROOT = Path(__file__).resolve().parents[1]
+SKILL_ROOT = Path(__file__).resolve().parents[2] / "skills" / "qutip"
 SCRIPTS = SKILL_ROOT / "scripts"
 REFERENCES = SKILL_ROOT / "references"
 CLI_NAMES = {

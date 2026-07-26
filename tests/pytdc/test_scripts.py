@@ -12,7 +12,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 
-SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
+SCRIPTS = Path(__file__).resolve().parents[2] / "skills" / "pytdc" / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
 import _common as common  # noqa: E402

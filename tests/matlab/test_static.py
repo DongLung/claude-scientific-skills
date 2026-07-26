@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 from urllib.parse import urlsplit
 
-SKILL_ROOT = Path(__file__).resolve().parents[1]
+SKILL_ROOT = Path(__file__).resolve().parents[2] / "skills" / "matlab"
 SCRIPTS = SKILL_ROOT / "scripts"
 REFERENCES = SKILL_ROOT / "references"
 ASSETS = SKILL_ROOT / "assets"

@@ -4,7 +4,7 @@ import unittest
 from pathlib import Path
 from types import SimpleNamespace
 
-SKILL_ROOT = Path(__file__).resolve().parent.parent
+SKILL_ROOT = Path(__file__).resolve().parents[2] / "skills" / "pacsomatic"
 SCRIPT_PATH = SKILL_ROOT / "scripts" / "run_pacsomatic.py"
 
 

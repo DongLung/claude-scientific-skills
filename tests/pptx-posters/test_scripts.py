@@ -11,9 +11,9 @@ import unittest
 import zipfile
 from pathlib import Path
 
-SKILL_ROOT = Path(__file__).resolve().parents[1]
+SKILL_ROOT = Path(__file__).resolve().parents[2] / "skills" / "pptx-posters"
 SCRIPTS = SKILL_ROOT / "scripts"
-TESTS = SKILL_ROOT / "tests"
+TESTS = Path(__file__).resolve().parent
 sys.path.insert(0, str(SCRIPTS))
 sys.path.insert(0, str(TESTS))
 
@@ -25,7 +25,7 @@ from _manifest import (  # noqa: E402
 from _pptx import MAX_MEMBERS, inspect_pptx, require_safe_pptx  # noqa: E402
 from check_palette import audit_palette, main as palette_main  # noqa: E402
 from plan_export import build_export_plan  # noqa: E402
-from synthetic import build_manifest  # noqa: E402
+from synthetic_posters import build_manifest  # noqa: E402
 
 CONTENT_TYPES = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">

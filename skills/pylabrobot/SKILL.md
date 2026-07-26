@@ -5,7 +5,7 @@ license: MIT
 compatibility: Verified against PyLabRobot 0.2.1 on Python 3.9+. Bundled planning CLIs require only Python 3.11+ and make no serial, USB, or network connections. Physical devices need model-specific extras, configuration, calibration, and trained operator approval.
 allowed-tools: Read Write Edit Bash
 metadata:
-  version: "1.1"
+  version: "1.2"
   skill-author: "K-Dense Inc."
   pylabrobot-version: "0.2.1"
   researched: "2026-07-23"
@@ -100,18 +100,18 @@ select a live backend.
 
 ```bash
 python3 skills/pylabrobot/scripts/validate_manifest.py \
-  --input skills/pylabrobot/tests/fixtures/protocol_manifest.json
+  --input tests/pylabrobot/fixtures/protocol_manifest.json
 
 python3 skills/pylabrobot/scripts/check_deck_geometry.py \
-  --input skills/pylabrobot/tests/fixtures/protocol_manifest.json
+  --input tests/pylabrobot/fixtures/protocol_manifest.json
 
 python3 skills/pylabrobot/scripts/plan_transfers.py \
-  --manifest skills/pylabrobot/tests/fixtures/protocol_manifest.json \
-  --transfers skills/pylabrobot/tests/fixtures/transfers.csv
+  --manifest tests/pylabrobot/fixtures/protocol_manifest.json \
+  --transfers tests/pylabrobot/fixtures/transfers.csv
 
 python3 skills/pylabrobot/scripts/generate_simulation_plan.py \
-  --manifest skills/pylabrobot/tests/fixtures/protocol_manifest.json \
-  --transfers skills/pylabrobot/tests/fixtures/transfers.csv
+  --manifest tests/pylabrobot/fixtures/protocol_manifest.json \
+  --transfers tests/pylabrobot/fixtures/transfers.csv
 
 python3 skills/pylabrobot/scripts/inspect_backends.py \
   --expected-version 0.2.1 --strict

@@ -14,7 +14,7 @@ import unittest
 from pathlib import Path
 
 
-SKILL_ROOT = Path(__file__).resolve().parents[1]
+SKILL_ROOT = Path(__file__).resolve().parents[2] / "skills" / "pathml"
 SCRIPTS = SKILL_ROOT / "scripts"
 REFERENCES = SKILL_ROOT / "references"
 sys.path.insert(0, str(SCRIPTS))

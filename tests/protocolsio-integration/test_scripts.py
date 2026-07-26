@@ -14,7 +14,10 @@ from contextlib import redirect_stdout
 from pathlib import Path
 
 
-SKILL_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[2]
+SKILL_ROOT = REPO_ROOT / "skills" / "protocolsio-integration"
+TESTS_DIR = Path(__file__).resolve().parent
+FIXTURES = TESTS_DIR / "fixtures"
 if str(SKILL_ROOT) not in sys.path:
     sys.path.insert(0, str(SKILL_ROOT))
 
@@ -84,7 +87,7 @@ class SequenceOpener:
 class ScriptTests(unittest.TestCase):
     def setUp(self) -> None:
         self.previous_cwd = Path.cwd()
-        os.chdir(SKILL_ROOT)
+        os.chdir(REPO_ROOT)
 
     def tearDown(self) -> None:
         os.chdir(self.previous_cwd)
@@ -196,8 +199,12 @@ class ScriptTests(unittest.TestCase):
                 )
 
     def test_offline_protocol_summary_preserves_version_and_attribution(self) -> None:
-        payload = load_local_json("tests/fixtures/protocol_response.json")
-        schema = load_local_json("assets/protocol-snapshot.schema.json")
+        payload = load_local_json(
+            "tests/protocolsio-integration/fixtures/protocol_response.json"
+        )
+        schema = load_local_json(
+            "skills/protocolsio-integration/assets/protocol-snapshot.schema.json"
+        )
         report = validate_protocol_json.validate_and_summarize(
             payload,
             require_version=True,
@@ -223,10 +230,10 @@ class ScriptTests(unittest.TestCase):
         self.assertFalse(report["network_accessed"])
 
     def test_duplicate_json_keys_are_rejected(self) -> None:
-        with tempfile.TemporaryDirectory(dir=SKILL_ROOT / "tests") as directory:
+        with tempfile.TemporaryDirectory(dir=TESTS_DIR) as directory:
             path = Path(directory) / "duplicate.json"
             path.write_text('{"protocol": {}, "protocol": {}}', encoding="utf-8")
-            relative = path.relative_to(SKILL_ROOT)
+            relative = path.relative_to(REPO_ROOT)
             with self.assertRaises(SafetyError):
                 load_local_json(str(relative))
 
@@ -290,7 +297,7 @@ class ScriptTests(unittest.TestCase):
             )
 
     def test_upload_plan_hashes_bounded_local_file_only(self) -> None:
-        with tempfile.TemporaryDirectory(dir=SKILL_ROOT / "tests") as directory:
+        with tempfile.TemporaryDirectory(dir=TESTS_DIR) as directory:
             path = Path(directory) / "sample.bin"
             path.write_bytes(b"sample")
             report = plan_write_request.build_plan(
@@ -299,7 +306,7 @@ class ScriptTests(unittest.TestCase):
                 payload={},
                 origin="https://www.protocols.io",
                 tenant_origin=None,
-                upload_file=str(path.relative_to(SKILL_ROOT)),
+                upload_file=str(path.relative_to(REPO_ROOT)),
                 local_max_upload_bytes=100,
                 confirmation=None,
             )
@@ -319,7 +326,7 @@ class ScriptTests(unittest.TestCase):
 
     def test_mocked_get_uses_named_token_without_emitting_it(self) -> None:
         credential = "-".join(("unit", "test", "bearer"))
-        body = (SKILL_ROOT / "tests/fixtures/protocol_response.json").read_bytes()
+        body = (FIXTURES / "protocol_response.json").read_bytes()
         url = (
             "https://www.protocols.io/api/v4/protocols/"
             "example-protocol/v2?content_format=json"
@@ -467,9 +474,9 @@ class ScriptTests(unittest.TestCase):
             )
 
     def test_mocked_pdf_export_writes_private_file(self) -> None:
-        with tempfile.TemporaryDirectory(dir=SKILL_ROOT / "tests") as directory:
+        with tempfile.TemporaryDirectory(dir=TESTS_DIR) as directory:
             output = Path(directory) / "protocol.pdf"
-            relative = output.relative_to(SKILL_ROOT)
+            relative = output.relative_to(REPO_ROOT)
             args = protocols_read.build_parser().parse_args(
                 [
                     "--execute",

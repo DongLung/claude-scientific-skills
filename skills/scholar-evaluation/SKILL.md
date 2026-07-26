@@ -5,7 +5,7 @@ license: MIT
 compatibility: Requires Python 3.11+ for optional bundled standard-library CLIs. All tooling is local JSON/CSV processing with no network, credentials, external models, or subprocesses.
 allowed-tools: Read Write Bash Glob Python
 metadata:
-  version: "2.0"
+  version: "2.1"
   skill-author: K-Dense Inc.
 ---
 

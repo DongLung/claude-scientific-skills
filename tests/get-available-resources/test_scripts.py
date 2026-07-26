@@ -14,7 +14,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest import mock
 
-SKILL_ROOT = Path(__file__).resolve().parents[1]
+SKILL_ROOT = Path(__file__).resolve().parents[2] / "skills" / "get-available-resources"
 SCRIPTS = SKILL_ROOT / "scripts"
 FIXTURES = Path(__file__).resolve().parent / "fixtures" / "resource_cases.json"
 sys.path.insert(0, str(SCRIPTS))

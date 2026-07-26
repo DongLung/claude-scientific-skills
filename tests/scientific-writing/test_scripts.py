@@ -9,7 +9,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2] / "skills" / "scientific-writing"
 SCRIPTS = ROOT / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -23,7 +23,7 @@ import select_reporting_guidelines
 import validate_authorship
 import validate_manifest
 from _common import InputError, read_json
-from synthetic import (
+from synthetic_manuscript import (
     valid_authorship_manifest,
     valid_claim_csv,
     valid_consistency_manifest,

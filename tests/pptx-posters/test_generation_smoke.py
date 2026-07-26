@@ -13,9 +13,9 @@ import zipfile
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 
-SKILL_ROOT = Path(__file__).resolve().parents[1]
+SKILL_ROOT = Path(__file__).resolve().parents[2] / "skills" / "pptx-posters"
 SCRIPTS = SKILL_ROOT / "scripts"
-TESTS = SKILL_ROOT / "tests"
+TESTS = Path(__file__).resolve().parent
 sys.path.insert(0, str(SCRIPTS))
 sys.path.insert(0, str(TESTS))
 
@@ -25,7 +25,7 @@ from _pptx import P_NS, analyze_layout, inspect_pptx  # noqa: E402
 from check_layout import apply_manifest_checks  # noqa: E402
 from generate_poster import generate_poster  # noqa: E402
 from inventory_images import build_inventory  # noqa: E402
-from synthetic import build_manifest  # noqa: E402
+from synthetic_posters import build_manifest  # noqa: E402
 
 EXPECTED = {
     "python-pptx": "1.0.2",

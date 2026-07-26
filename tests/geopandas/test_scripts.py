@@ -11,7 +11,7 @@ import unittest
 from importlib.metadata import version
 from pathlib import Path
 
-SKILL_ROOT = Path(__file__).resolve().parents[1]
+SKILL_ROOT = Path(__file__).resolve().parents[2] / "skills" / "geopandas"
 SCRIPTS = SKILL_ROOT / "scripts"
 CLI_NAMES = (
     "crs_reprojection_plan.py",

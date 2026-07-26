@@ -5,7 +5,7 @@ license: MIT
 compatibility: Python bindings require Python 3.10+ and gtars 0.9.2. The Rust meta-crate and gtars-cli are 0.9.0 and require a Rust toolchain supporting Edition 2024; upstream declares no rust-version. Bundled audit CLIs use only Python 3.10+ standard library and are local/network-free. Remote constructors, pretrained tokenizers, refget, and BEDbase caching require explicit network and storage approval.
 allowed-tools: Read Write Edit Bash Glob
 metadata:
-  version: "1.1"
+  version: "1.2"
   skill-author: K-Dense Inc.
 ---
 
@@ -254,7 +254,7 @@ Run synthetic tests without bytecode:
 
 ```bash
 PYTHONDONTWRITEBYTECODE=1 python3 -B -m unittest discover \
-  -s skills/gtars/tests -p 'test_*.py' -v
+  -s tests/gtars -p 'test_*.py' -v
 ```
 
 ## Migration traps removed in 1.1

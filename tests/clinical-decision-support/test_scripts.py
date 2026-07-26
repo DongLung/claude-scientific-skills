@@ -12,7 +12,7 @@ from pathlib import Path
 
 sys.dont_write_bytecode = True
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2] / "skills" / "clinical-decision-support"
 SCRIPTS = ROOT / "scripts"
 ASSETS = ROOT / "assets"
 sys.path.insert(0, str(SCRIPTS))
@@ -115,7 +115,7 @@ class StaticSafetyTests(unittest.TestCase):
     def test_skill_is_progressively_disclosed_and_versioned(self) -> None:
         text = (ROOT / "SKILL.md").read_text(encoding="utf-8")
         self.assertLess(len(text.splitlines()), 500)
-        self.assertIn('version: "2.0"', text)
+        self.assertIn('version: "2.1"', text)
         self.assertIn("license: MIT", text)
         self.assertIn("metadata:\n  version:", text)
 

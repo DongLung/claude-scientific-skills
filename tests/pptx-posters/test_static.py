@@ -12,7 +12,7 @@ import sys
 import unittest
 from pathlib import Path
 
-SKILL_ROOT = Path(__file__).resolve().parents[1]
+SKILL_ROOT = Path(__file__).resolve().parents[2] / "skills" / "pptx-posters"
 SCRIPTS = SKILL_ROOT / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
@@ -53,7 +53,7 @@ class FrontmatterTests(unittest.TestCase):
         self.assertRegex(text, r"(?m)^name: pptx-posters$")
         self.assertRegex(text, r"(?m)^license: MIT$")
         self.assertRegex(text, r"(?m)^compatibility: .+")
-        self.assertRegex(text, r"(?ms)^metadata:\n  version: \"2\.0\"\n")
+        self.assertRegex(text, r"(?ms)^metadata:\n  version: \"2\.1\"\n")
         self.assertNotRegex(text, r"(?m)^metadata:\s*\{")
         self.assertNotIn("required_environment_variables", text)
         # The spec requires allowed-tools to be a space-separated string, not a YAML list.

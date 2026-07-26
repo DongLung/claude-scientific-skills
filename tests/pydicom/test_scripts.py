@@ -10,7 +10,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-SKILL_ROOT = Path(__file__).resolve().parents[1]
+SKILL_ROOT = Path(__file__).resolve().parents[2] / "skills" / "pydicom"
 SCRIPTS = SKILL_ROOT / "scripts"
 CLI_NAMES = (
     "anonymize_dicom.py",

@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Any
 
 
-SKILL_ROOT = Path(__file__).resolve().parents[1]
+SKILL_ROOT = Path(__file__).resolve().parents[2] / "skills" / "hypogenic"
 SCRIPTS = SKILL_ROOT / "scripts"
 REFERENCES = SKILL_ROOT / "references"
 ASSETS = SKILL_ROOT / "assets"

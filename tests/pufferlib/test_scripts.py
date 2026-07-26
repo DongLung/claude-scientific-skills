@@ -12,7 +12,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-SKILL_DIR = Path(__file__).resolve().parents[1]
+SKILL_DIR = Path(__file__).resolve().parents[2] / "skills" / "pufferlib"
 SCRIPTS_DIR = SKILL_DIR / "scripts"
 sys.path.insert(0, str(SCRIPTS_DIR))
 

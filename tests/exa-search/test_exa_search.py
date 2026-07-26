@@ -21,7 +21,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
-SKILL_ROOT = Path(__file__).resolve().parent.parent
+SKILL_ROOT = Path(__file__).resolve().parents[2] / "skills" / "exa-search"
 SCRIPTS_DIR = SKILL_ROOT / "scripts"
 
 
