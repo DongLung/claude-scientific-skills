@@ -240,6 +240,12 @@ Scientific Agent Skills is powered by **50+ incredible open source projects** ma
 
 ---
 
+## 🙏 Skill Credits
+
+The **[docx](skills/docx/)**, **[pdf](skills/pdf/)**, **[pptx](skills/pptx/)**, and **[xlsx](skills/xlsx/)** document skills are created and maintained by **Anthropic** and vendored here from [anthropics/skills](https://github.com/anthropics/skills/tree/main/skills). They are used under Anthropic's terms — see each skill's `LICENSE.txt` — and we track upstream so you get their latest improvements. All credit for those four skills goes to Anthropic.
+
+---
+
 ## ⚙️ Prerequisites
 
 - **Python**: 3.13+ for repository tooling; individual skill dependencies may support broader Python ranges
