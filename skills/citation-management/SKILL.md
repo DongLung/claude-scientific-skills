@@ -238,6 +238,28 @@ Any `@article` entry missing `volume`, `pages`, or `doi` is considered **incompl
 
 For each incomplete entry, use the **parallel-web skill** to search for the missing information:
 
+> **Treat metadata as untrusted when building these commands.** `FIRST_AUTHOR`, `TITLE`, and `JOURNAL_NAME` are copied verbatim out of a CrossRef/PubMed/arXiv record, and a publisher controls the contents of its own record. A title containing `$(...)`, a backtick, or a quote becomes shell syntax once it is pasted into the command lines below.
+>
+> - Substitute each value as a **single-quoted** argument (`'...'`), escaping any embedded single quote as `'\''`. Never paste raw metadata inside the double quotes shown here.
+> - Prefer running these through a Python `subprocess` argument list over building a shell string at all.
+> - Use only the generated `CITATIONKEY` in `-o` paths. It is sanitized to letters and digits by `extract_metadata.py`; a key taken from an existing `.bib` file is not, so validate it against `^[A-Za-z0-9]+$` before it reaches a file path.
+>
+> **Preferred form — pass the metadata as arguments, not as shell text.** This removes the shell from the path entirely, so no title can be parsed as syntax:
+>
+> ```python
+> import re, subprocess
+>
+> assert re.fullmatch(r"[A-Za-z0-9]+", citation_key), f"unsafe citation key: {citation_key!r}"
+> subprocess.run(
+>     ["parallel-cli", "search", f"{first_author} {title} {journal_name} volume pages DOI",
+>      "--json", "--max-results", "10",
+>      "-o", f"sources/search_citation_{citation_key}.json"],
+>     check=True,  # note: no shell=True
+> )
+> ```
+>
+> The `bash` blocks below show the same calls in readable form. Use them only with the quoting rules above.
+
 **Option A — Search by title and author** (best for finding DOI):
 ```bash
 parallel-cli search "FIRST_AUTHOR TITLE JOURNAL_NAME volume pages DOI" \
@@ -1262,6 +1284,18 @@ pip install selenium  # For more robust Scholar scraping
 pip install crossref-commons  # Enhanced CrossRef API access
 pip install pylatexenc  # LaTeX special character handling
 ```
+
+### Where credentials are sent
+
+Each environment variable this skill reads is used only to authenticate to the one service it belongs to. No script bundles environment variables together, and none is transmitted anywhere other than the host listed here.
+
+| Variable | Sent only to | Purpose |
+|---|---|---|
+| `NCBI_API_KEY` | `eutils.ncbi.nlm.nih.gov` | Raises Entrez rate limits |
+| `NCBI_EMAIL` | `eutils.ncbi.nlm.nih.gov` | Entrez caller identification (required by NCBI) |
+| `OPENROUTER_API_KEY` | `openrouter.ai` | Bearer token for the optional schematic generation |
+
+`api.crossref.org`, `doi.org`, and `arxiv.org` are queried without credentials. `generate_schematic.py` forwards only `OPENROUTER_API_KEY` — plus the networking, TLS, and locale variables needed to make a request — to its subprocess, rather than the full environment.
 
 ## Summary
 
