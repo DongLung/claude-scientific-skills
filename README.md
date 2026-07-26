@@ -89,6 +89,7 @@ Each skill includes:
 - [Quick Examples](#-quick-examples)
 - [Use Cases](#-use-cases)
 - [Available Skills](#-available-skills)
+- [From the Blog](#-from-the-blog)
 - [Contributing](#-contributing)
 - [Troubleshooting](#-troubleshooting)
 - [FAQ](#-faq)
@@ -577,6 +578,38 @@ This repository contains **150 scientific and research skills** organized across
 > 📖 **For complete details on all skills**, see [docs/skills.md](docs/skills.md)
 
 > 💡 **Looking for practical examples?** Check out [docs/examples.md](docs/examples.md) for comprehensive workflow examples across all scientific domains.
+
+---
+
+## 📝 From the Blog
+
+Deep dives, benchmarks, and guides from the [K-Dense blog](https://www.k-dense.ai/blog) that are directly relevant to using the skills in this repository.
+
+### Start here
+
+- **[Agent Skills: The Final Piece for AI-Powered Scientific Research](https://www.k-dense.ai/blog/agent-skills-final-piece-for-ai-powered-research)** — What Agent Skills are, why curated domain guidance beats raw model capability, and an introduction to this repository.
+- **[K-Dense Web vs Scientific Agent Skills: Why We Built Both (And Which One You Should Use)](https://www.k-dense.ai/blog/k-dense-web-vs-scientific-agent-skills)** — When the open-source skills are the right tool, and when a hosted platform with managed compute makes more sense.
+
+### Skill benchmarks and deep dives
+
+- **[One Skill, 78 Databases: Why We Didn't Build 78 Skills](https://www.k-dense.ai/blog/database-lookup-one-skill-78-databases)** — The design rationale behind [database-lookup](skills/database-lookup/): consolidation cut always-on context cost by 13.9x while holding routing accuracy across five models.
+- **[Can an AI Agent Run Your Mass Spec Pipeline? Benchmarking the PyOpenMS Skill](https://www.k-dense.ai/blog/benchmarking-pyopenms-skill-mass-spectrometry)** — A 250-run study of [pyopenms](skills/pyopenms/): 100% task success with the skill versus 96% without, 92% fewer pyOpenMS API errors, and 10% lower cost.
+- **[Beyond RDKit: Benchmarking the Rowan Agent Skill Against Experiment](https://www.k-dense.ai/blog/benchmarking-rowan-skill-chemistry)** — [rowan](skills/rowan/) compared against RDKit and experimental data: pKa MAE 0.23 (R² 0.986), logD₇.₄ MAE 1.15, and 0.19 Å RMSD docking pose recovery for roughly $0.52 of compute.
+- **[GPU-Accelerate Your Science: 58x Average Speedup with a Single Skill](https://www.k-dense.ai/blog/optimize-for-gpu-skill)** — [optimize-for-gpu](skills/optimize-for-gpu/) rewriting CPU-bound Python across 12 libraries, with speedups ranging from 1.7x to 492x.
+- **[Towards Smarter Scientific Search: Exa Joins the Scientific Agent Skills Library](https://www.k-dense.ai/blog/towards-smarter-scientific-search-exa-scientific-agent-skills)** — What [exa-search](skills/exa-search/) adds: neural semantic search and URL extraction tuned for scholarly discovery instead of keyword matching.
+- **[Benchmarking Nano Banana 2 Lite for Scientific Image Generation](https://www.k-dense.ai/blog/benchmarking-nano-banana-2-lite-scientific-image-model)** — A 240-image comparison of scientific-diagram models, useful when choosing a backend for [generate-image](skills/generate-image/): 3.8 s median latency for Nano Banana 2 Lite against 49 s for GPT Image 2, with a quality tradeoff.
+- **[Benchmarking NVIDIA BioNeMo Agent Toolkit Skills for NIM microservices](https://www.k-dense.ai/blog/benchmarking-nvidia-bionemo-nim-skill)** — A separate NVIDIA skill set rather than one of these, but the findings generalize: skills help most with routing to non-obvious endpoints and with weak-model reliability, and do not improve the underlying scientific model's accuracy.
+
+### Security and safe deployment
+
+- **[Security in the Science Agent Era: What Every Lab Needs to Know Before Installing Skills](https://www.k-dense.ai/blog/skill-security-before-you-install)** — The practical review checklist behind this repo's [Security Disclaimer](#%EF%B8%8F-security-disclaimer): read the full `SKILL.md` and `scripts/`, scan before installing, and pin versions instead of tracking a branch.
+- **[The Sandboxed AI Scientist: Pairing NVIDIA OpenShell with Scientific Agent Skills](https://www.k-dense.ai/blog/sandboxed-ai-scientist-openshell-skills)** — Running these skills inside a policy-governed sandbox; see also the NemoClaw note in [Getting Started](#-getting-started).
+
+### Complementary open-source projects
+
+- **[Introducing Science Superpowers: Scientific Discipline for Your Research Agent](https://www.k-dense.ai/blog/introducing-science-superpowers)** — Hypothesis pre-registration, reproducible workflows, and verification-before-claims that wrap around these skills to guard against p-hacking and HARKing.
+- **[Your AI Assistant Reasons Like a Generalist. Science Needs a Specialist.](https://www.k-dense.ai/blog/introducing-scientific-agents)** — 503 open-source `AGENTS.md` profiles supplying the "how to think" layer alongside the "what to do" procedures in these skills.
+- **[Introducing mimeo and 80+ Mimeographs](https://www.k-dense.ai/blog/introducing-mimeo-and-mimeographs)** — Generate your own `SKILL.md` / `AGENTS.md` expert profiles by distilling how a given practitioner reasons.
 
 ---
 
