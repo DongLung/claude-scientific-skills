@@ -193,12 +193,21 @@ for d in skills/*/; do uv run skills-ref validate "$d"; done
 repo rules `skills-ref` does not check: `metadata.version` present, `allowed-tools` a
 space-separated string, `metadata` scalars quoted, and a warning past 500 lines.
 
-Security-scan new or substantially changed skills. `.github/workflows/pr-skill-scan.yml` does this
-for changed skills on every PR and posts a sticky comment, failing on HIGH or above:
+Security-scan new or substantially changed skills. Scanning uses
+[Cisco AI Defense Skill Scanner](https://github.com/cisco-ai-defense/skill-scanner) — the
+`cisco-ai-skill-scanner` package pinned in `pyproject.toml`, which detects prompt injection, data
+exfiltration, and malicious code patterns in Agent Skills. Its README documents the rule IDs and
+CLI flags; consult it when a finding's rule is unfamiliar.
+
+`.github/workflows/pr-skill-scan.yml` runs the repo wrapper for changed skills on every PR and
+posts a sticky comment, failing on HIGH or above:
 
 ```bash
 # needs SKILL_SCANNER_LLM_API_KEY (see .env)
 uv run python scan_pr_skills.py skills/<name>
+
+# or the upstream CLI directly, without the repo wrapper
+uv run skill-scanner scan skills/<name> --use-behavioral
 ```
 
 **Verify a finding against the code before "fixing" it.** Known systematic false positives:
