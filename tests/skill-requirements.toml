@@ -193,6 +193,9 @@ packages = []
 
 # --- core data, statistics, and plotting ----------------------------------
 
+[skills.uncertainty-and-units]
+packages = ["pint", "uncertainties", "numpy", "scipy"]
+
 [skills.matplotlib]
 packages = ["matplotlib", "ipympl", "numpy", "pandas", "scipy"]
 
