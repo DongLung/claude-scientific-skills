@@ -129,6 +129,9 @@ packages = []
 [skills.bgpt-paper-search]
 packages = []
 
+[skills.ontology-term-resolution]
+packages = []
+
 [skills.peer-review]
 packages = []
 
