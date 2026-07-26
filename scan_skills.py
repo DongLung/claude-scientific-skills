@@ -16,7 +16,7 @@ findings instead of being rescanned; a change of scanner version or model, or
 
 Environment:
     SKILL_SCANNER_LLM_API_KEY   API key for the LLM analyzer
-    SKILL_SCANNER_LLM_MODEL     model id (default: anthropic/claude-sonnet-5)
+    SKILL_SCANNER_LLM_MODEL     model id (default: claude-opus-5)
     SKILL_SCAN_WORKERS          concurrent skills (default: 8)
     SKILL_SCAN_FULL             set to 1 to force a full rescan
     SKILL_SCAN_MAX_AGE_DAYS     force a full rescan after this many days (default: 30)
@@ -69,7 +69,7 @@ def scanner_version() -> str:
 
 
 def llm_model_id() -> str:
-    return os.getenv("SKILL_SCANNER_LLM_MODEL", "anthropic/claude-sonnet-5")
+    return os.getenv("SKILL_SCANNER_LLM_MODEL", "claude-opus-5")
 
 
 def content_hash(skill_dir: Path) -> str:

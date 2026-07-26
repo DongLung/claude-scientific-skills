@@ -3,11 +3,7 @@ name: pylabrobot
 description: Develop and review PyLabRobot lab-automation resources, liquid-handling plans, offline simulations, and supported-device integrations. Use for PyLabRobot protocols or API questions; keep physical execution behind an explicit operator safety gate.
 license: MIT
 compatibility: Verified against PyLabRobot 0.2.1 on Python 3.9+. Bundled planning CLIs require only Python 3.11+ and make no serial, USB, or network connections. Physical devices need model-specific extras, configuration, calibration, and trained operator approval.
-allowed-tools:
-  - Read
-  - Write
-  - Edit
-  - Bash
+allowed-tools: Read Write Edit Bash
 metadata:
   version: "1.1"
   skill-author: "K-Dense Inc."

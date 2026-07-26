@@ -40,7 +40,9 @@ Use this minimum template:
 ---
 name: skill-name
 description: Clear description of what the skill does and when an agent should use it.
-metadata: {"version": "1.0", "skill-author": "Your Name"}
+metadata:
+  version: "1.0"
+  skill-author: Your Name
 ---
 
 # Skill Title
@@ -70,19 +72,33 @@ Follow the [Agent Skills specification](https://agentskills.io/specification) an
 - `description` should explain both what the skill does and when an agent should use it.
 - `metadata.version` is required in this repository, even though `metadata` is optional in the upstream spec.
 - Version values must be quoted numeric strings, such as `"1.0"` or `"1.1"`.
-- **Write `metadata` as a single-line JSON object** (flow style), for example `metadata: {"version": "1.0", "skill-author": "K-Dense Inc."}`. This is valid YAML — so it parses identically in Claude Code, Cursor, Codex, Hermes, Pi, and any Agent Skills-compliant host — and it is the only form OpenClaw's line-based frontmatter reader can parse (a multi-line block `metadata:` is silently dropped there). Do not use a nested `metadata:` block.
+- **Only the six fields defined by the specification are allowed** at the top level: `name`, `description`, `license`, `compatibility`, `allowed-tools`, and `metadata`. The spec defines a closed set and the reference validator rejects any other top-level key, so everything else belongs under `metadata`.
+- **Write `metadata` as a block mapping, not single-line JSON.** The reference validator parses frontmatter with `strictyaml`, which rejects JSON-style flow mappings. A flow mapping does not merely fail one check — the entire frontmatter fails to parse, so `name` and `description` become unreadable and the skill does not register.
+
+  ```yaml
+  # Wrong -- breaks the reference validator
+  metadata: {"version": "1.0", "skill-author": "K-Dense Inc."}
+
+  # Right
+  metadata:
+    version: "1.0"
+    skill-author: K-Dense Inc.
+  ```
 
 Optional frontmatter fields from the specification may be used when relevant:
 
 - `license`: the license for the individual skill, if different or worth stating explicitly.
-- `compatibility`: environment requirements such as Python version, system packages, agent host, or network access.
-- `metadata`: additional metadata. Must be a single-line JSON object (see above). Common keys: `version` (required), `skill-author`, an optional `openclaw` block, and an optional `hermes` block (see below).
-- `allowed-tools`: space-separated tool permissions for hosts that support this experimental field.
-- `required_environment_variables`: top-level Hermes credential declarations (see below). Other hosts ignore it.
+- `compatibility`: environment requirements such as Python version, system packages, agent host, or network access. Maximum 500 characters.
+- `metadata`: additional metadata, as a block mapping of string keys to string values. Quote any value that would otherwise parse as a number, boolean, or date (`version: "1.0"`, `last-reviewed: "2026-07-23"`). Common keys: `version` (required), `skill-author`, and an optional nested `openclaw` or `hermes` block (see below).
+- `allowed-tools`: a **space-separated string** of tool permissions for hosts that support this experimental field, for example `allowed-tools: Read Write Edit Bash`. Not a YAML list.
 
 ### OpenClaw gating (`metadata.openclaw`)
 
-OpenClaw reads an optional `openclaw` object nested inside `metadata` for dependency gating, credential injection, and display. Because it lives under `metadata`, the Agent Skills spec permits it and other hosts ignore it. It is only needed for skills with external requirements (credentials, daemons, specific binaries) — most skills omit it entirely. Supported keys:
+OpenClaw reads an optional `openclaw` object nested inside `metadata` for dependency gating, credential injection, and display. Because it lives under `metadata`, the Agent Skills spec permits it and other hosts ignore it. It is only needed for skills with external requirements (credentials, daemons, specific binaries) — most skills omit it entirely.
+
+**Keep this block a nested mapping — never a JSON string.** OpenClaw's `resolveOpenClawManifestBlock()` requires `typeof candidate === "object"`, so a stringified block silently disables gating and credential injection with no error. This is the one documented exception to the string-values rule for `metadata`, and it still passes `skills-ref validate`.
+
+Supported keys:
 
 - `requires`: hard eligibility gates — `{"bins": [...]}` (all must be on `PATH`), `{"anyBins": [...]}` (at least one), `{"env": [...]}` (vars that must be set), `{"config": [...]}`. A failed gate hides the skill from the agent, so only gate on things the skill genuinely cannot run without.
 - `primaryEnv`: the main credential variable; OpenClaw injects it from its config (`skills.entries.<name>.apiKey`).
@@ -93,29 +109,57 @@ OpenClaw reads an optional `openclaw` object nested inside `metadata` for depend
 Example (an API-key skill that stays available even without the key set, so it gates nothing and only declares the credential):
 
 ```yaml
-metadata: {"version": "1.0", "skill-author": "K-Dense Inc.", "openclaw": {"primaryEnv": "EXA_API_KEY", "envVars": [{"name": "EXA_API_KEY", "required": true, "description": "Exa search API key."}]}}
+metadata:
+  version: "1.0"
+  skill-author: K-Dense Inc.
+  openclaw:
+    primaryEnv: EXA_API_KEY
+    envVars:
+      - name: EXA_API_KEY
+        required: true
+        description: Exa search API key.
 ```
 
 ### Hermes compatibility (`required_environment_variables` and `metadata.hermes`)
 
 [Hermes](https://hermes-agent.nousresearch.com/docs) is Agent Skills-compatible, so every skill in this repository already loads and runs there with no changes. Two optional fields make credentialed skills first-class on Hermes:
 
-- **`required_environment_variables`** (top level): the credentials Hermes should prompt for. Write it as a single-line JSON array — `[{"name": "X_API_KEY", "prompt": "What it is", "required_for": "full functionality"}]`. This is the one Hermes-specific field that is *not* nested under `metadata`, because Hermes reads secrets at the top level. Writing it as single-line JSON keeps it valid YAML for every host and lets OpenClaw's line-based reader skip it cleanly; Claude Code, Cursor, and Codex ignore the unknown key. Mirror the same variables you declare in `metadata.openclaw.envVars`, using `required_for: "full functionality"` for required vars and `"optional features"` for optional ones.
-- **`metadata.hermes`** (nested, spec-safe like `openclaw`): optional classification and gating — `tags`, `category`, `requires_toolsets`, `fallback_for_toolsets`. A failed `requires_toolsets` gate *hides* the skill, so only gate on a tool the skill genuinely cannot run without; prefer leaving it unset so the skill stays available.
+- **`metadata.hermes`** (nested, spec-safe like `openclaw`): optional classification and gating — `tags`, `category`, `requires_toolsets`, `fallback_for_toolsets`. A failed `requires_toolsets` gate *hides* the skill, so only gate on a tool the skill genuinely cannot run without; prefer leaving it unset so the skill stays available. Keep it a nested mapping, not a JSON string.
 
-Example (an API-key skill, declaring its credential for Hermes alongside the OpenClaw block):
+Example (an API-key skill, declaring its credential for OpenClaw and classifying itself for Hermes):
 
 ```yaml
-required_environment_variables: [{"name": "EXA_API_KEY", "prompt": "Exa search API key.", "required_for": "full functionality"}]
-metadata: {"version": "1.0", "skill-author": "Exa", "openclaw": {"primaryEnv": "EXA_API_KEY", "envVars": [{"name": "EXA_API_KEY", "required": true, "description": "Exa search API key."}]}}
+metadata:
+  version: "1.0"
+  skill-author: Exa
+  openclaw:
+    primaryEnv: EXA_API_KEY
+    envVars:
+      - name: EXA_API_KEY
+        required: true
+        description: Exa search API key.
+  hermes:
+    category: research
 ```
+
+### `required_environment_variables` is not used in this repository
+
+Hermes also reads a **top-level** `required_environment_variables` array to prompt for credentials. That field cannot coexist with spec conformance: the specification defines a closed set of six top-level fields, so the reference validator rejects it outright — and because `strictyaml` fails the whole frontmatter block on an unknown-shaped document, the failure is not confined to that one key.
+
+This repository therefore does not use it. Declare credentials in two spec-legal places instead:
+
+- `compatibility` — a human- and agent-readable sentence naming the variables the skill needs.
+- `metadata.openclaw.envVars` — the machine-readable declaration, which ClawHub's security analysis also checks against the variables your scripts actually reference.
+
+Skills still load and run on Hermes; only its automatic credential prompt is unavailable, and the required variables remain discoverable from the two fields above.
 
 ## Versioning
 
-Every `SKILL.md` must include a quoted `version` inside the single-line `metadata` object:
+Every `SKILL.md` must include a quoted `version` inside the `metadata` mapping:
 
 ```yaml
-metadata: {"version": "1.0"}
+metadata:
+  version: "1.0"
 ```
 
 For a new skill, start at `"1.0"`.
@@ -173,13 +217,17 @@ Good skills are specific, practical, and easy for an agent to apply.
 
 ## Validation
 
-Validate Agent Skills format with the reference validator:
+Validate Agent Skills format with the reference validator, which is already a dev dependency:
 
 ```bash
-skills-ref validate ./skills/skill-name
+uv sync
+uv run skills-ref validate ./skills/skill-name
+
+# or check every skill at once, the same way CI does
+for d in skills/*/; do uv run skills-ref validate "$d"; done
 ```
 
-If `skills-ref` is not installed, follow the installation instructions from the [skills-ref reference library](https://github.com/agentskills/agentskills/tree/main/skills-ref).
+CI runs this on every pull request that touches `skills/`, along with the repo-specific checks in `.github/workflows/skill-spec-validation.yml` (a required `metadata.version`, `allowed-tools` as a string, quoted `metadata` scalars, and a warning above 500 lines).
 
 Security-scan new or substantially changed skills:
 
@@ -196,8 +244,11 @@ Before submitting a pull request, confirm:
 
 - The skill directory name and `name` frontmatter match exactly.
 - `SKILL.md` has valid YAML frontmatter and Markdown body content.
-- `metadata` is a single-line JSON object (not a multi-line block), so it parses on OpenClaw as well as Claude Code, Cursor, Codex, Hermes, and Pi.
-- If the skill needs credentials, `required_environment_variables` is present as a single-line JSON array and mirrors the variables in `metadata.openclaw.envVars`.
+- `uv run skills-ref validate ./skills/<name>` passes.
+- Only the six spec-defined top-level fields are present; anything else lives under `metadata`.
+- `metadata` is a block mapping, not single-line JSON, and its scalar values are quoted where needed.
+- Any `metadata.openclaw` or `metadata.hermes` block is a nested mapping, not a JSON string.
+- If the skill needs credentials, they are named in `compatibility` and declared in `metadata.openclaw.envVars`.
 - `metadata.version` exists and is quoted.
 - Existing skills have a version bump when changed.
 - The `description` clearly says what the skill does and when to use it.

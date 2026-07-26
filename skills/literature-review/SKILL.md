@@ -3,8 +3,15 @@ name: literature-review
 description: Conduct comprehensive, systematic literature reviews using multiple academic databases (PubMed, arXiv, bioRxiv, Semantic Scholar, etc.). This skill should be used when conducting systematic literature reviews, meta-analyses, research synthesis, or comprehensive literature searches across biomedical, scientific, and technical domains. Creates professionally formatted markdown documents and PDFs with verified citations in multiple citation styles (APA, Nature, Vancouver, etc.).
 allowed-tools: Read Write Edit Bash
 license: MIT license
-required_environment_variables: [{"name": "OPENROUTER_API_KEY", "prompt": "OpenRouter API key for the skill's LLM-powered steps.", "required_for": "optional features"}]
-metadata: {"version": "1.3", "skill-author": "K-Dense Inc.", "openclaw": {"primaryEnv": "OPENROUTER_API_KEY", "envVars": [{"name": "OPENROUTER_API_KEY", "required": false, "description": "OpenRouter API key for the skill's LLM-powered steps."}]}}
+metadata:
+  version: "1.3"
+  skill-author: K-Dense Inc.
+  openclaw:
+    primaryEnv: OPENROUTER_API_KEY
+    envVars:
+    - name: OPENROUTER_API_KEY
+      required: false
+      description: OpenRouter API key for the skill's LLM-powered steps.
 ---
 
 # Literature Review

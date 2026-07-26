@@ -56,11 +56,8 @@ class FrontmatterTests(unittest.TestCase):
         self.assertRegex(text, r"(?ms)^metadata:\n  version: \"2\.0\"\n")
         self.assertNotRegex(text, r"(?m)^metadata:\s*\{")
         self.assertNotIn("required_environment_variables", text)
-        self.assertRegex(
-            text,
-            r"(?ms)^allowed-tools:\n  - Read\n  - Write\n  - Bash\n"
-            r"  - Glob\n  - Grep\n  - Python\n",
-        )
+        # The spec requires allowed-tools to be a space-separated string, not a YAML list.
+        self.assertRegex(text, r"(?m)^allowed-tools: Read Write Bash Glob Grep Python$")
 
     def test_expected_files_and_deletions(self) -> None:
         for name in (

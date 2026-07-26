@@ -3,7 +3,7 @@ name: iso-13485-certification
 description: Prepare and structurally review ISO 13485 QMS scope, controlled documentation, and local evidence manifests. Use for ISO 13485 certification-readiness documentation or for separating related FDA QMSR, MDSAP, and EU MDR/IVDR evidence boundaries; not for legal applicability, compliance, or certification decisions.
 license: MIT
 compatibility: Python 3.11+; bundled CLIs use only the standard library and bounded local JSON/Markdown files, with no network access or credentials.
-allowed-tools: Read, Write, Bash, Glob
+allowed-tools: Read Write Bash Glob
 metadata:
   version: "1.1"
   skill-author: K-Dense Inc.

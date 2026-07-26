@@ -26,7 +26,8 @@ class SkillStructureTests(unittest.TestCase):
         self.assertLess(len(text.splitlines()), 500)
         self.assertIn("\nlicense: MIT\n", text)
         self.assertIn("\ncompatibility:", text)
-        self.assertIn("\nallowed-tools: Read, Write, Bash, Glob, Grep\n", text)
+        # The spec requires allowed-tools to be space-separated, not comma-separated.
+        self.assertIn("\nallowed-tools: Read Write Bash Glob Grep\n", text)
         self.assertRegex(
             text,
             r'\nmetadata:\n  version: "1\.1"\n  skill-author:'
