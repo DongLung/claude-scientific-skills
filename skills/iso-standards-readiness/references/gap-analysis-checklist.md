@@ -1,7 +1,13 @@
-# Fail-Closed QMS Evidence Review
+# Fail-Closed Evidence Review
 
-Research basis: **2026-07-23**. This checklist organizes evidence questions; it is
-not ISO text, an audit, a legal determination, or a compliance score.
+Research basis: **2026-07-23**, extended **2026-07-26** for laboratory lanes. This
+checklist organizes evidence questions; it is not ISO or IEC text, an audit, an
+assessment, a legal determination, or a compliance score.
+
+Sections up to "Training, competence, and change control" apply to the device QMS lanes
+(`iso-13485`, `iso-14971`). The laboratory sections near the end apply to `iso-17025`
+and `iso-15189`. Use the sections your declared profile covers; do not report on a
+domain you did not sample.
 
 ## Status vocabulary
 
@@ -38,7 +44,9 @@ Blank, placeholder, inaccessible, stale, or unapproved fields fail closed.
 ## Workflow
 
 1. Freeze the review purpose and boundaries: internal audit, ISO certification
-   preparation, FDA inspection preparation, MDSAP, or EU conformity assessment.
+   preparation, laboratory accreditation assessment preparation, FDA inspection
+   preparation, national regulatory inspection preparation, MDSAP, or EU conformity
+   assessment. One purpose per review.
 2. Obtain authorized standards and current official regulatory sources.
 3. Record product/site/market/activity scope; route applicability decisions to
    authorized management, RA/QA, and legal roles.
@@ -223,11 +231,93 @@ As of this research date, QMSR is effective and FDA uses Compliance Program
 Use `scripts/check_qmsr_transition.py`; do not create a legacy-QSR clause map as the
 current control framework.
 
+## Laboratory scope, impartiality, and competence (`iso-17025`, `iso-15189`)
+
+- [ ] Declared scope of laboratory activities is recorded per location, per method or
+      examination, with the measurand or property and the range or sample type.
+- [ ] Declared scope is reconciled against the current accredited scope schedule, and
+      any work outside it is identified with its claim controls.
+- [ ] Accreditation symbols, endorsement wording, and recognition-arrangement phrasing
+      are current, authorized, and used only within scope.
+- [ ] Impartiality risks are identified with controls, review evidence, and an owner —
+      not a bare policy statement.
+- [ ] Authorized signatories are listed with the scope each covers and the competence
+      evidence behind the authorization.
+- [ ] Personnel competence is evidenced per activity: training, authorization,
+      ongoing monitoring, and reauthorization after change.
+- [ ] Facilities and environmental conditions that affect results are monitored, with
+      records and action on excursions.
+- [ ] Equipment records cover calibration status, intermediate checks, out-of-service
+      handling, and the effect of any failure on previously reported results.
+
+## Metrological traceability, uncertainty, and decision rules (`iso-17025`, `iso-15189`)
+
+- [ ] Traceability is documented as a chain per measurement: stated reference, provider
+      and its accreditation scope, certificate identity, uncertainty carried forward,
+      interval justification, and intermediate checks.
+- [ ] Where no reference system exists for a measurand, that fact and the alternative
+      comparability approach are recorded and authorized.
+- [ ] Measurement uncertainty is evaluated for the measurands that require it, with a
+      stated basis, contributions, and controlled revision.
+- [ ] Reported uncertainty and its relationship to the decision rule are consistent
+      with the report wording.
+- [ ] Where conformity is stated, the decision rule is documented, agreed where
+      required, and applied consistently at the specification limit.
+- [ ] The policy basis for traceability and decision rules is cited by current
+      designation and issue, confirmed rather than assumed.
+
+## Methods, validity of results, and reporting (`iso-17025`, `iso-15189`)
+
+- [ ] Each scope item is classified: standard method as published, standard method
+      requiring verification, modified method, or laboratory-developed method — with
+      the evidence that classification demands.
+- [ ] Verification or validation records show performance characteristics evaluated,
+      acceptance criteria, data, and authorized approval to put into service.
+- [ ] Methods are revisited after instrument, reagent, personnel, or issue changes.
+- [ ] Proficiency-testing or external-quality-assessment enrolment covers the scope
+      items it should, with a documented plan and frequency.
+- [ ] Every questionable or unsatisfactory PT/EQA result has an investigation, an
+      action, and effectiveness evidence. **Treat an uninvestigated unsatisfactory
+      result as a blocker.**
+- [ ] Where no scheme exists, the alternative comparison approach is recorded and
+      authorized.
+- [ ] Technical records are sufficient to reproduce the reported result, with
+      identifiable personnel, dates, and revisions.
+- [ ] Report and certificate content, amendment and retraction handling, and
+      authorized signature are controlled.
+- [ ] Nonconforming work has documented evaluation, action, customer notification where
+      required, and recall or amendment of affected results.
+
+## Medical laboratory pre- and post-examination (`iso-15189`)
+
+- [ ] Request content, patient identification, and primary sample identification
+      controls are evidenced by records, including identification-error events and their
+      investigations.
+- [ ] Collection, transport, stability, acceptance, and rejection criteria are recorded,
+      with rejection and transport-excursion records sampled.
+- [ ] Result review and authorization before release is evidenced per examination.
+- [ ] Biological reference intervals and clinical decision limits have a documented
+      basis for the population served, not only a package-insert citation.
+- [ ] Critical-result notification records exist, with recipient, time, read-back, and
+      timeliness against the defined requirement.
+- [ ] Interpretive comments are made only by authorized persons, per a controlled basis.
+- [ ] Point-of-care testing under the laboratory's responsibility has governance,
+      operator authorization, QC, connectivity, and reconciliation evidence.
+- [ ] Laboratory information management covers data integrity, access control, change
+      control, validation of the system and of interfaces, and downtime handling.
+- [ ] Continuity and emergency arrangements have been exercised, with records — not a
+      plan nobody has tested.
+- [ ] CLIA, licensure, and payer evidence is kept in a separate register, with no
+      implication that ISO 15189 accreditation satisfies any of them.
+
 ## Regime handoff
 
 Before final review, state which authorized party owns the next decision:
 
 - ISO certification body for certification audit/certificate decisions;
+- the accreditation body and its assessors for accreditation and scope decisions;
+- CMS, the CMS-approved accreditation organization, or the state agency for CLIA
+  certification, deemed status, and licensure decisions;
 - FDA for inspection and enforcement decisions;
 - MDSAP-recognized Auditing Organization and participating authorities for MDSAP;
 - designated MDR/IVDR notified body and competent authorities for applicable EU
@@ -237,14 +327,20 @@ Before final review, state which authorized party owns the next decision:
 
 ## Deterministic tooling
 
-- `validate_scope_intake.py` — accountable scope/applicability decisions
+- `validate_scope_intake.py` — accountable scope/applicability decisions (`--standard`)
 - `audit_document_records.py` — document, record, retention, and source register
 - `check_capa.py` — CAPA/effectiveness closure gates
-- `check_traceability.py` — risk/design/production/postmarket links
-- `check_qmsr_transition.py` — current post-effective-date QMSR evidence
-- `validate_evidence_manifest.py` — bounded local readiness manifest
-- `check_supplier_controls.py` — risk-based supplier evidence
+- `check_traceability.py` — risk/design/production/postmarket links; device lanes only,
+  and **not** metrological traceability
+- `check_qmsr_transition.py` — current post-effective-date QMSR evidence; US device lane
+- `validate_evidence_manifest.py` — bounded local readiness manifest (`--standard`)
+- `check_supplier_controls.py` — risk-based supplier and external-provider evidence
 - `gap_analyzer.py` — domain coverage without keyword or percentage scoring
+  (`--standard`)
+
+Pass `--standard iso-13485|iso-14971|iso-17025|iso-15189` to the three profile-aware
+checks so the domain vocabulary matches the standard under review. An unlisted value is
+refused rather than defaulted.
 
 All tools are local JSON/Markdown structural checks. Exit 0 means only that no
 structural finding was generated for the supplied data.

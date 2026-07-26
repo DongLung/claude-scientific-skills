@@ -11,13 +11,14 @@ import argparse
 from collections import Counter
 from typing import Any
 
-from _catalog import PROCESS_DOMAINS
+from _catalog import StandardProfile
 from _common import (
     InputError,
     build_report,
     emit_report,
     guarded_main,
     load_json,
+    profile_for,
     require_root_object,
     standard_parser,
 )
@@ -45,23 +46,25 @@ def analyze(
     *,
     base_dir: str | None,
     verify_files: bool,
+    profile: StandardProfile,
 ) -> tuple[dict[str, Any], int]:
     review, manifest_metrics = validate_manifest(
         data,
         base_dir=base_dir,
         verify_files=verify_files,
+        profile=profile,
     )
     expected_raw = data.get("expected_domains")
     expected = {
         item
         for item in expected_raw
-        if isinstance(item, str) and item in PROCESS_DOMAINS
+        if isinstance(item, str) and item in profile.process_domains
     } if isinstance(expected_raw, list) else set()
 
     entries_raw = data.get("entries")
     entries = entries_raw if isinstance(entries_raw, list) else []
     by_domain: dict[str, list[dict[str, Any]]] = {
-        domain: [] for domain in PROCESS_DOMAINS
+        domain: [] for domain in profile.process_domains
     }
     for item in entries:
         if not isinstance(item, dict):
@@ -72,7 +75,7 @@ def analyze(
 
     domain_results: list[dict[str, Any]] = []
     statuses: Counter[str] = Counter()
-    for domain in PROCESS_DOMAINS:
+    for domain in profile.process_domains:
         domain_entries = by_domain[domain]
         if domain not in expected:
             status = "not-assessed"
@@ -116,6 +119,7 @@ def analyze(
             **manifest_metrics,
             "domain_status_counts": dict(sorted(statuses.items())),
         },
+        standard=profile.key,
     )
     report["domains"] = domain_results
     report["method"] = (
@@ -129,6 +133,7 @@ def main() -> int:
     parser = standard_parser(
         "Create a fail-closed evidence gap report from a local readiness manifest.",
         "Path to the local evidence-manifest JSON file",
+        with_standard=True,
     )
     parser.add_argument(
         "--base-dir",
@@ -147,6 +152,7 @@ def main() -> int:
         data,
         base_dir=args.base_dir,
         verify_files=args.verify_files,
+        profile=profile_for(args),
     )
     emit_report(
         report,

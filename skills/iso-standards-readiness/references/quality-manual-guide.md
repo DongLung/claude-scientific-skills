@@ -1,7 +1,14 @@
 # Quality Manual Development Guide
 
-Research basis: **2026-07-23**. This guide explains an evidence-controlled authoring
-process. It does not reproduce ISO 13485 text or prescribe a universal manual format.
+Research basis: **2026-07-23**, extended **2026-07-26** for laboratory lanes. This guide
+explains an evidence-controlled authoring process. It does not reproduce standard text
+or prescribe a universal manual format.
+
+The authoring process applies to any management-system documentation this skill covers.
+Where it says "QMS scope," a laboratory's equivalent is the **scope of laboratory
+activities** — per location and per method or examination — and a laboratory manual
+should point to the accredited scope schedule rather than restate it. Read
+`references/iso-17025.md` or `references/iso-15189.md` alongside this guide.
 
 ## Boundary and copyright
 
@@ -248,6 +255,14 @@ MDCG guidance is nonbinding and must be version-controlled.
 Record the certification body's scope and, if accredited certification is sought, the
 accreditation scope relevant to ISO 13485 technical areas. This does not establish
 notified-body designation or product conformity.
+
+For a laboratory, the manual describes a system that an accreditation body assesses —
+the laboratory is accredited, not certified, and the manual must not say otherwise.
+Record the accreditation body, the scope schedule reference, authorized signatories and
+what each may sign, and the rules for using accreditation symbols and endorsement
+wording. Verify current recognition-arrangement phrasing before reproducing it: Global
+Accreditation Cooperation Incorporated replaced ILAC and IAF on 2026-01-01, so legacy
+"ILAC MRA" or "IAF MLA" wording may be transitional rather than current.
 
 ## Review questions
 

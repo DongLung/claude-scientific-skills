@@ -1,38 +1,26 @@
 #!/usr/bin/env python3
-"""Validate a declared QMS applicability and scope intake.
+"""Validate a declared applicability and scope intake for one standard profile.
 
 The script checks whether accountable humans documented decisions and evidence. It
-does not decide whether a law, regulation, standard, or conformity route applies.
+does not decide whether a law, regulation, standard, conformity route, or
+accreditation scheme applies.
 """
 
 from __future__ import annotations
 
 from typing import Any
 
+from _catalog import StandardProfile
 from _common import (
     Review,
     finish,
     guarded_main,
     load_json,
+    profile_for,
     require_root_object,
     standard_parser,
 )
 
-ACTIVITIES = {
-    "design-and-development",
-    "manufacturing",
-    "contract-manufacturing",
-    "sterilization",
-    "packaging-and-labeling",
-    "storage",
-    "distribution",
-    "installation",
-    "servicing",
-    "software-development",
-    "complaint-handling",
-    "postmarket-surveillance",
-    "regulatory-reporting",
-}
 APPLICABILITY = {"applicable", "not-applicable", "undetermined"}
 
 
@@ -66,8 +54,12 @@ def _text_list(
     return result
 
 
-def validate(data: dict[str, Any]) -> tuple[Review, dict[str, int]]:
+def validate(
+    data: dict[str, Any],
+    profile: StandardProfile,
+) -> tuple[Review, dict[str, int]]:
     review = Review()
+    activities = set(profile.scope_activities)
 
     metadata = review.object(data.get("metadata"), "metadata")
     if metadata is not None:
@@ -100,14 +92,14 @@ def validate(data: dict[str, Any]) -> tuple[Review, dict[str, int]]:
 
     scope = review.object(data.get("scope"), "scope")
     sites: list[Any] = []
-    products: list[Any] = []
+    scope_items: list[Any] = []
     markets: list[Any] = []
     if scope is not None:
         _text_list(
             review,
-            scope.get("lifecycle_activities"),
-            "scope.lifecycle_activities",
-            allowed=ACTIVITIES,
+            scope.get(profile.activities_section),
+            f"scope.{profile.activities_section}",
+            allowed=activities,
         )
 
         sites = review.list(scope.get("sites"), "scope.sites", min_items=1) or []
@@ -123,31 +115,26 @@ def validate(data: dict[str, Any]) -> tuple[Review, dict[str, int]]:
                 review,
                 site.get("activities"),
                 f"{path}.activities",
-                allowed=ACTIVITIES,
+                allowed=activities,
             )
             review.controlled_item(site, path, require_approved=True)
         review.unique_ids(sites, "scope.sites")
 
-        products = (
-            review.list(scope.get("products"), "scope.products", min_items=1) or []
+        section = profile.scope_item_section
+        scope_items = (
+            review.list(scope.get(section), f"scope.{section}", min_items=1) or []
         )
-        for index, item in enumerate(products):
-            path = f"scope.products[{index}]"
-            product = review.object(item, path)
-            if product is None:
+        for index, item in enumerate(scope_items):
+            path = f"scope.{section}[{index}]"
+            scope_item = review.object(item, path)
+            if scope_item is None:
                 continue
-            review.text(product, "id", path, max_chars=120)
-            review.text(product, "family", path, max_chars=300)
-            review.text(product, "intended_use", path, max_chars=2_000)
-            review.text(
-                product,
-                "classification_or_rationale",
-                path,
-                max_chars=1_000,
-            )
-            _text_list(review, product.get("market_ids"), f"{path}.market_ids")
-            review.controlled_item(product, path, require_approved=True)
-        review.unique_ids(products, "scope.products")
+            review.text(scope_item, "id", path, max_chars=120)
+            for field, max_chars in profile.scope_item_fields:
+                review.text(scope_item, field, path, max_chars=max_chars)
+            _text_list(review, scope_item.get("market_ids"), f"{path}.market_ids")
+            review.controlled_item(scope_item, path, require_approved=True)
+        review.unique_ids(scope_items, f"scope.{section}")
 
         markets = review.list(scope.get("markets"), "scope.markets", min_items=1) or []
         for index, item in enumerate(markets):
@@ -194,20 +181,28 @@ def validate(data: dict[str, Any]) -> tuple[Review, dict[str, int]]:
 
     return review, {
         "markets": len(markets),
-        "products": len(products),
+        profile.scope_item_section: len(scope_items),
         "sites": len(sites),
     }
 
 
 def main() -> int:
     parser = standard_parser(
-        "Validate a local QMS scope/applicability intake without deciding applicability.",
+        "Validate a local scope/applicability intake without deciding applicability.",
         "Path to the local scope-intake JSON file",
+        with_standard=True,
     )
     args = parser.parse_args()
+    profile = profile_for(args)
     data = require_root_object(load_json(args.input))
-    review, metrics = validate(data)
-    return finish("validate_scope_intake", review, args, metrics=metrics)
+    review, metrics = validate(data, profile)
+    return finish(
+        "validate_scope_intake",
+        review,
+        args,
+        metrics=metrics,
+        standard=profile.key,
+    )
 
 
 if __name__ == "__main__":

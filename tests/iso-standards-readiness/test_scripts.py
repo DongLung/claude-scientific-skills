@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any
 
 
-ROOT = Path(__file__).resolve().parents[2] / "skills" / "iso-13485-certification"
+ROOT = Path(__file__).resolve().parents[2] / "skills" / "iso-standards-readiness"
 SCRIPTS = ROOT / "scripts"
 CLI_NAMES = (
     "gap_analyzer.py",
@@ -334,10 +334,14 @@ def qmsr_data() -> dict[str, Any]:
     }
 
 
-def manifest_data(local_path: str = "evidence.md", digest: str | None = None) -> dict[str, Any]:
+def manifest_data(
+    local_path: str = "evidence.md",
+    digest: str | None = None,
+    domain: str = "document-and-record-control",
+) -> dict[str, Any]:
     entry = {
         "id": "MAN-ENTRY-1",
-        "domain": "document-and-record-control",
+        "domain": domain,
         "title": "Controlled document evidence",
         "owner": "Evidence Owner",
         "status": "verified",
@@ -362,7 +366,7 @@ def manifest_data(local_path: str = "evidence.md", digest: str | None = None) ->
             "approval": approval(),
             "source_refs": [source()],
         },
-        "expected_domains": ["document-and-record-control"],
+        "expected_domains": [domain],
         "entries": [entry],
         "open_gaps": [],
     }
@@ -605,6 +609,70 @@ class CLITests(unittest.TestCase):
                 self.assertEqual(result.returncode, 1, result.stderr + result.stdout)
                 report = json.loads(result.stdout)
                 self.assertEqual(report["result"], "gaps-found")
+
+    def test_standard_specific_templates_fail_closed(self) -> None:
+        cases = {
+            "scope-intake-template.json": "iso-13485",
+            "laboratory-scope-intake-template.json": "iso-17025",
+            "medical-laboratory-scope-intake-template.json": "iso-15189",
+        }
+        for template, standard in cases.items():
+            with self.subTest(template=template):
+                result = self.run_cli(
+                    "validate_scope_intake.py",
+                    str(ROOT / "assets" / "templates" / template),
+                    "--standard",
+                    standard,
+                )
+                self.assertEqual(result.returncode, 1, result.stderr + result.stdout)
+                report = json.loads(result.stdout)
+                self.assertEqual(report["result"], "gaps-found")
+                self.assertEqual(report["standard"], standard)
+
+    def test_unknown_standard_is_refused(self) -> None:
+        for script in (
+            "validate_scope_intake.py",
+            "validate_evidence_manifest.py",
+            "gap_analyzer.py",
+        ):
+            with self.subTest(script=script):
+                with tempfile.TemporaryDirectory() as temp:
+                    path = self.write_json(Path(temp), "input.json", manifest_data())
+                    result = self.run_cli(script, str(path), "--standard", "iso-99999")
+                    self.assertEqual(result.returncode, 2, result.stdout)
+                    self.assertIn("invalid choice", result.stderr)
+
+    def test_laboratory_profile_uses_its_own_domains(self) -> None:
+        data = manifest_data(domain="metrological-traceability")
+        data["audit_context"]["purpose"] = "accreditation-assessment-readiness"
+        with tempfile.TemporaryDirectory() as temp:
+            path = self.write_json(Path(temp), "manifest.json", data)
+            result = self.run_cli("gap_analyzer.py", str(path), "--standard", "iso-17025")
+            self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+            report = json.loads(result.stdout)
+            self.assertEqual(report["standard"], "iso-17025")
+            domains = {row["domain"]: row["status"] for row in report["domains"]}
+            self.assertEqual(
+                domains["metrological-traceability"],
+                "evidence-present-for-human-review",
+            )
+            self.assertIn("reporting-and-decision-rules", domains)
+            self.assertNotIn("postmarket-and-vigilance", domains)
+
+    def test_device_domain_is_refused_under_laboratory_profile(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            path = self.write_json(Path(temp), "manifest.json", manifest_data())
+            result = self.run_cli(
+                "validate_evidence_manifest.py",
+                str(path),
+                "--standard",
+                "iso-15189",
+            )
+            self.assertEqual(result.returncode, 1)
+            report = json.loads(result.stdout)
+            codes = {item["code"] for item in report["findings"]}
+            self.assertIn("CHOICE_INVALID", codes)
+            self.assertIn("VALUE_UNKNOWN", codes)
 
     def test_no_bytecode_artifacts_created(self) -> None:
         for path in ROOT.rglob("__pycache__"):

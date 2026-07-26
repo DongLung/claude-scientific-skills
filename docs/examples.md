@@ -3544,7 +3544,7 @@ Expected Output:
 **Objective**: Prepare draft QMS scope, controlled-document scaffolds, and evidence manifests for qualified ISO 13485 readiness review. The workflow does not determine legal applicability, compliance, audit outcome, or certification.
 
 **Skills Used**:
-- `iso-13485-certification` - Draft scope, controlled-document, and evidence preparation
+- `iso-standards-readiness` - Draft scope, controlled-document, and evidence preparation
 - `scientific-writing` - Evidence provenance and accountable draft controls
 - `markdown-mermaid-writing` - Process diagrams and SOP flowcharts
 - `docx` - Formatted Word deliverables
@@ -3556,7 +3556,8 @@ Expected Output:
 Step 1: Authorized evidence inventory
 - Confirm access to the applicable licensed standard and current jurisdiction-specific
   requirements through qualified RA/QA or legal owners
-- Use iso-13485-certification to inventory supplied documents, implementation records,
+- Use iso-standards-readiness with `--standard iso-13485` to inventory supplied
+  documents, implementation records,
   evidence status, owners, and unresolved blockers
 - Do not infer readiness or conformity from filenames, keywords, document counts,
   percentages, templates, or script results
@@ -3750,7 +3751,7 @@ The examples in this document cover the following skill categories:
 - `scientific-writing`, `scientific-visualization`, `scientific-schematics`, `scientific-slides`, `markdown-mermaid-writing`, `infographics`
 - `clinical-reports`, `clinical-decision-support`
 - `literature-review`, `scientific-critical-thinking`
-- `research-grants`, `peer-review`, `venue-templates`, `iso-13485-certification`
+- `research-grants`, `peer-review`, `venue-templates`, `iso-standards-readiness`
 - `pdf`, `docx`, `pptx`, `xlsx`, `latex-posters`, `pptx-posters`
 - `citation-management`, `market-research-reports`
 

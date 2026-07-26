@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Shared, bounded helpers for local QMS evidence checks.
+"""Shared, bounded helpers for local standards-readiness evidence checks.
 
 These helpers validate structure and evidence metadata only. They never determine
-regulatory applicability, conformity, compliance, certification, or audit outcome.
+regulatory applicability, conformity, compliance, certification, accreditation, or
+audit outcome.
 """
 
 from __future__ import annotations
@@ -15,6 +16,8 @@ from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 from typing import Any, Iterable
+
+from _catalog import DEFAULT_STANDARD, STANDARD_KEYS, STANDARDS, StandardProfile
 
 MAX_INPUT_BYTES = 2_000_000
 MAX_ITEMS = 5_000
@@ -52,8 +55,9 @@ PLACEHOLDER_RE = re.compile(
 
 DISCLAIMER = (
     "Structural evidence check only. A zero-finding result does not establish "
-    "legal applicability, regulatory compliance, ISO conformity or certification, "
-    "MDSAP acceptability, EU conformity, or inspection readiness."
+    "legal applicability, regulatory compliance, conformity to any standard, "
+    "certification, accreditation, MDSAP acceptability, EU conformity, or "
+    "inspection readiness."
 )
 
 
@@ -413,12 +417,28 @@ class Review:
             self.source_refs(obj, path)
 
 
-def standard_parser(description: str, input_help: str) -> argparse.ArgumentParser:
+def standard_parser(
+    description: str,
+    input_help: str,
+    *,
+    with_standard: bool = False,
+) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=description,
         epilog=DISCLAIMER,
     )
     parser.add_argument("input", help=input_help)
+    if with_standard:
+        parser.add_argument(
+            "--standard",
+            choices=STANDARD_KEYS,
+            default=DEFAULT_STANDARD,
+            help=(
+                "Declared standard profile supplying the process-domain and scope "
+                "vocabulary. Selecting a profile does not decide that the standard "
+                "applies. An unlisted value is refused."
+            ),
+        )
     parser.add_argument(
         "--output",
         help="Write the JSON report locally instead of stdout",
@@ -436,18 +456,29 @@ def standard_parser(description: str, input_help: str) -> argparse.ArgumentParse
     return parser
 
 
+def profile_for(args: argparse.Namespace) -> StandardProfile:
+    """Return the declared standard profile, defaulting to the device QMS set.
+
+    argparse refuses an unlisted --standard value with exit code 2, so this never
+    silently falls back to the default for an unknown standard.
+    """
+
+    return STANDARDS[getattr(args, "standard", DEFAULT_STANDARD)]
+
+
 def build_report(
     tool: str,
     findings: Iterable[Finding],
     *,
     metrics: dict[str, Any] | None = None,
-    basis: str = "2026-07-23",
+    basis: str = "2026-07-26",
+    standard: str | None = None,
 ) -> dict[str, Any]:
     ordered = sorted(
         findings,
         key=lambda item: (item.path, item.code, item.message, item.severity),
     )
-    return {
+    report = {
         "basis_date": basis,
         "disclaimer": DISCLAIMER,
         "findings": [item.as_dict() for item in ordered],
@@ -455,6 +486,9 @@ def build_report(
         "result": "gaps-found" if ordered else "complete-for-human-review",
         "tool": tool,
     }
+    if standard is not None:
+        report["standard"] = standard
+    return report
 
 
 def emit_report(
@@ -498,8 +532,14 @@ def finish(
     args: argparse.Namespace,
     *,
     metrics: dict[str, Any] | None = None,
+    standard: str | None = None,
 ) -> int:
-    report = build_report(tool, review.findings, metrics=metrics)
+    report = build_report(
+        tool,
+        review.findings,
+        metrics=metrics,
+        standard=standard,
+    )
     emit_report(
         report,
         args.output,

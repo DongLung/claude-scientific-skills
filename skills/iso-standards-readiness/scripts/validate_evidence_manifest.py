@@ -8,7 +8,7 @@ import hashlib
 from pathlib import Path
 from typing import Any
 
-from _catalog import PROCESS_DOMAINS
+from _catalog import StandardProfile
 from _common import (
     ALLOWED_STATUSES,
     MAX_INPUT_BYTES,
@@ -17,6 +17,7 @@ from _common import (
     finish,
     guarded_main,
     load_json,
+    profile_for,
     require_root_object,
     standard_parser,
 )
@@ -24,7 +25,9 @@ from _common import (
 PURPOSES = {
     "internal-audit",
     "iso-certification-readiness",
+    "accreditation-assessment-readiness",
     "fda-inspection-readiness",
+    "national-regulatory-inspection-readiness",
     "mdsap-audit-readiness",
     "eu-conformity-assessment-readiness",
 }
@@ -86,8 +89,10 @@ def validate(
     *,
     base_dir: str | None,
     verify_files: bool,
+    profile: StandardProfile,
 ) -> tuple[Review, dict[str, int]]:
     review = Review()
+    domains = set(profile.process_domains)
     metadata = review.object(data.get("metadata"), "metadata")
     if metadata is not None:
         review.controlled_item(metadata, "metadata", require_approved=True)
@@ -109,7 +114,7 @@ def validate(
         review,
         data.get("expected_domains"),
         "expected_domains",
-        set(PROCESS_DOMAINS),
+        domains,
     )
 
     if verify_files and base_dir is None:
@@ -128,7 +133,7 @@ def validate(
         domain = review.choice(
             entry,
             "domain",
-            set(PROCESS_DOMAINS),
+            domains,
             path,
         )
         if domain:
@@ -208,6 +213,7 @@ def main() -> int:
     parser = standard_parser(
         "Validate a local audit/readiness evidence manifest.",
         "Path to the local evidence-manifest JSON file",
+        with_standard=True,
     )
     parser.add_argument(
         "--base-dir",
@@ -219,13 +225,21 @@ def main() -> int:
         help="Verify bounded local JSON/Markdown evidence paths and optional hashes",
     )
     args: argparse.Namespace = parser.parse_args()
+    profile = profile_for(args)
     data = require_root_object(load_json(args.input))
     review, metrics = validate(
         data,
         base_dir=args.base_dir,
         verify_files=args.verify_files,
+        profile=profile,
     )
-    return finish("validate_evidence_manifest", review, args, metrics=metrics)
+    return finish(
+        "validate_evidence_manifest",
+        review,
+        args,
+        metrics=metrics,
+        standard=profile.key,
+    )
 
 
 if __name__ == "__main__":

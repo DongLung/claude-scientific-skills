@@ -170,7 +170,7 @@ packages = []
 [skills.experimental-design]
 packages = ["numpy", "pandas", "pyDOE3"]
 
-[skills.iso-13485-certification]
+[skills.iso-standards-readiness]
 packages = []
 
 [skills.clinical-decision-support]

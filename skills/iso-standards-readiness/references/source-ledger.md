@@ -1,10 +1,23 @@
 # Official Source Ledger
 
-**Research date:** 2026-07-23
-**Method:** targeted `parallel-cli search` and `parallel-cli extract`, restricted to
-official publishers and regulator/program sites.
+**Baseline research date:** 2026-07-23 — device lanes (ISO 13485, ISO 14971, FDA
+QMSR, MDSAP, EU MDR/IVDR), established with targeted `parallel-cli search` and
+`parallel-cli extract` against official publishers and regulator/program sites.
+
+**Extension research date:** 2026-07-26 — laboratory lanes (ISO/IEC 17025,
+ISO 15189), ISO/TR 24971, and accreditation-scheme documents, established with web
+search against official publishers, accreditation bodies, and CMS.
+
 **Purpose:** version baseline for this skill; not legal advice, an applicability
-decision, certification criteria, or a substitute for controlled source copies.
+decision, certification or accreditation criteria, or a substitute for controlled
+source copies.
+
+**Provenance limitation on the 2026-07-26 additions.** `iso.org` returned HTTP 403
+to automated fetching during that research, so the ISO catalogue metadata below was
+taken from search-result summaries and from accreditation-body and ILAC pages rather
+than read directly off the ISO catalogue page. Entries carrying that limitation are
+marked **[confirm on iso.org]**. Confirm each against the linked official page, or an
+authorized copy, before relying on an edition, date, or stage.
 
 Recheck every source before operational use. Web pages and consolidated texts can
 change after the research date.
@@ -48,6 +61,48 @@ change after the research date.
   corresponding IVDR decision, IVDR support. A11 is European; it does not change the
   international ISO 14971 normative part.
 - Limitation: risk-management evidence remains product- and jurisdiction-specific.
+
+### ISO/TR 24971:2020
+
+- Official page:
+  [ISO/TR 24971:2020](https://www.iso.org/standard/74437.html)
+- Verified metadata: Edition 2; guidance companion to ISO 14971:2019, with the same
+  clause structure and numbering. **[confirm on iso.org]**
+- Verified status: a Technical Report. Its guidance is informative, not normative, and
+  conformity is claimed to ISO 14971, never to ISO/TR 24971.
+- Limitation: a TR cannot be used to relax or reinterpret a normative requirement.
+  Record which guidance the organization adopted and why.
+
+### ISO/IEC 17025:2017
+
+- Official page:
+  [ISO/IEC 17025:2017](https://www.iso.org/standard/66912.html)
+- Landing page:
+  [ISO/IEC 17025 — Testing and calibration laboratories](https://www.iso.org/ISO-IEC-17025-testing-and-calibration-laboratories.html)
+- Verified metadata: Edition 3; published 2017; no successor edition identified at the
+  research date. **[confirm on iso.org]**
+- Use: identifies the current edition for laboratory competence work.
+- Limitation: ISO/IEC 17025 is an accreditation standard, not a certification scheme
+  and not a product standard. Accreditation is granted by an accreditation body for a
+  defined scope of laboratory activities; nothing in this skill grants or predicts it.
+
+### ISO 15189:2022
+
+- Official page:
+  [ISO 15189:2022](https://www.iso.org/standard/76677.html)
+- ILAC announcement:
+  [ISO 15189:2022 for medical labs published](https://ilac.org/latest_ilac_news/iso-151892022-for-medical-labs-published/)
+- Verified metadata: Edition 4; published December 2022; cancels and replaces
+  ISO 15189:2012. **[confirm on iso.org]**
+- Verified structural facts: the 2022 edition aligns structurally with
+  ISO/IEC 17025:2017 and incorporates point-of-care testing requirements previously
+  held in ISO 22870. Do not cite ISO 22870 as a separate current POCT basis without
+  confirming its status.
+- Verified transition: the ILAC-agreed transition period for accredited medical
+  laboratories ran to **December 2025**. Treat the 2022 edition as implemented, not
+  upcoming; a 2012-based quality system is out of date, not "in transition."
+- Limitation: accreditation scope is per laboratory, per location, and per
+  examination. It is not organization-wide and not equivalent to licensure.
 
 ### ISO copyright
 
@@ -217,6 +272,63 @@ change after the research date.
   ISO 13485 under ISO/IEC 17021-1. It does not establish product conformity,
   notified-body designation, regulatory applicability, or market authorization.
 
+### Accreditation: GLOBAC and the recognition arrangement
+
+- Launch announcement:
+  [Global Accreditation Cooperation Incorporated launch](https://iaf.nu/en/news/global-accreditation-cooperation-incorporated-launch-unifies-international-accreditation-organisations-and-strengthens-worldwide-trust/)
+- Transition guidance:
+  [Specifying use of GLOBAC accreditation](https://ilac.org/latest_ilac_news/iaf-and-ilac-release-information-on-specifying-use-of-globac-accreditation/)
+- Verified transition: Global Accreditation Cooperation Incorporated commenced full
+  operations on **2026-01-01**, bringing together the former ILAC and IAF and
+  launching its own Multilateral Recognition Arrangement. Certificates and accredited
+  results issued under the former IAF MLA / ILAC MRA continue to be recognized during
+  the transition.
+- Operational rule: check the *current* recognition-arrangement wording, logo rules,
+  and document designations before reproducing any accreditation claim in a document.
+  Legacy "ILAC MRA" / "IAF MLA" phrasing may be transitional rather than current.
+- Boundary: recognition arrangements concern accreditation bodies. They do not make an
+  accredited result a regulatory approval or a product conformity decision.
+
+### Accreditation: traceability and decision-rule policy
+
+- Policy series:
+  [ILAC policy series (P documents)](https://ilac.org/publications-and-resources/ilac-policy-series/)
+- Metrological traceability: **ILAC P10:07/2020**, implementation date July 2021,
+  revised to reflect ISO/IEC 17025:2017.
+- Decision rules and statements of conformity: **ILAC G8:09/2019**; JCGM 106:2012 /
+  ISO/IEC Guide 98-4 is the companion metrological basis.
+- Limitation and open item: no GLOBAC renumbering of the P/G series was identified at
+  the research date, and the ILAC designations above were still in use. Confirm the
+  current designation and issue before citing either document in a controlled
+  procedure — this is the most likely item in this ledger to have moved.
+- Boundary: a stated decision rule is a documented rule for declaring conformity
+  against a specification. It is not a compliance determination, and this skill does
+  not evaluate whether a chosen rule is fit for a customer's purpose.
+
+### United States medical laboratories: CLIA is a separate lane
+
+- CMS program page:
+  [Clinical Laboratory Improvement Amendments (CLIA)](https://www.cms.gov/medicare/quality/clinical-laboratory-improvement-amendments)
+- Accreditation and exemption page:
+  [CLIA accreditation and testing](https://www.cms.gov/medicare/quality/clinical-laboratory-improvement-amendments/accreditation-exemptions)
+- Approved accreditation organizations:
+  [Specialty/subspecialty information for approved AOs](https://www.cms.gov/Regulations-and-Guidance/Legislation/CLIA/Downloads/AOList.pdf)
+- Verified facts: CLIA certification by CMS is mandatory before a US laboratory may
+  accept human specimens for testing. CMS approves a limited set of accreditation
+  organizations whose standards must meet or exceed CLIA requirements; approval is
+  reapplied for every six years or more often. Seven approved AOs were reported at the
+  research date — read the current AO list rather than repeating that count.
+- Verified boundary: **ISO 15189 accreditation does not satisfy CLIA and cannot
+  replace a CLIA-based accreditation for a US laboratory.** Deemed status flows only
+  from a CMS-approved accreditation organization's program, not from ISO 15189 itself.
+- Program note: the CAP 15189 program is layered on top of CAP Laboratory
+  Accreditation Program accreditation rather than offered as a standalone substitute.
+  See [CAP 15189](https://www.cap.org/laboratory-improvement/accreditation/cap-15189-accreditation-program);
+  confirm current program prerequisites with CAP.
+- Operational rule: never present an ISO 15189 readiness output as CLIA compliance,
+  deemed status, licensure, or an inspection result. Keep the CLIA decision with the
+  authorized laboratory director and compliance owner.
+
 ## Research queries used
 
 Parallel searches/extracts covered:
@@ -230,4 +342,16 @@ Parallel searches/extracts covered:
 - NANDO/notified-body designation boundaries; and
 - the 2026 Global ACI transition and current MD 8/MD 9 documents.
 
-No Parallel research JSON was saved in the repository.
+The 2026-07-26 extension searched:
+
+- ISO/IEC 17025 revision status and whether a successor edition exists;
+- ISO 15189 edition, POCT consolidation, and the ILAC transition deadline;
+- ISO/TR 24971 edition and its status relative to ISO 14971;
+- the GLOBAC launch date, its MRA, and transitional recognition wording;
+- ILAC P10 and ILAC G8 current issues; and
+- CMS CLIA certification, approved accreditation organizations, and whether
+  ISO 15189 confers deemed status.
+
+No Parallel research JSON was saved in the repository. Several 2026-07-26 results came
+from secondary summaries of ISO catalogue pages because `iso.org` refused automated
+access; those entries are marked **[confirm on iso.org]** above.

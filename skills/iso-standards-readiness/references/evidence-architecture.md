@@ -1,7 +1,11 @@
 # Documentation and Evidence Architecture
 
-Research basis: **2026-07-23**. This is a process-oriented planning reference, not a
-list of copyrighted ISO requirements.
+Research basis: **2026-07-23**, extended **2026-07-26** for laboratory lanes. This is a
+process-oriented planning reference, not a list of copyrighted ISO or IEC requirements.
+
+The five-layer hierarchy below applies to every standard this skill covers. Where the
+wording is device-specific, the laboratory equivalent is noted; for depth read
+`references/iso-17025.md` or `references/iso-15189.md`.
 
 ## Do not use a fixed “31 procedures” claim
 
@@ -99,6 +103,30 @@ Do not claim that an ISO 13485 “medical device file” automatically replaces 
 FDA, EU, or other jurisdiction-specific file or record concept. Build a cross-reference
 that preserves each required record and its source/version.
 
+**Laboratory equivalent.** For ISO/IEC 17025 and ISO 15189 the technical evidence layer
+is organized per scope item — per method, measurand, or examination — rather than per
+product family. Depending on the activity it may include:
+
+- the controlled method or examination procedure and its issue, with the authorization
+  to put it into service;
+- verification or validation evidence: performance characteristics evaluated,
+  acceptance criteria, data, and approval;
+- the measurement-uncertainty evaluation and its stated basis;
+- metrological traceability evidence: stated reference, provider and its accreditation
+  scope, certificate identity, uncertainty carried forward, interval justification, and
+  intermediate checks;
+- the documented decision rule and customer-agreement record where conformity is
+  stated;
+- proficiency-testing or external-quality-assessment enrolment, results, evaluation
+  against criteria, and investigation of unsatisfactory outcomes;
+- equipment, reagent, consumable, and reference-material records;
+- technical records sufficient to reproduce the reported result; and
+- report and certificate templates, amendment/retraction handling, and authorized
+  signatories.
+
+An accredited scope schedule is not this layer — it is the output of the accreditation
+body. Keep the two apart in the register.
+
 ### 5. Implementation-record layer
 
 Procedures describe controls; records show what happened. Sample actual records for:
@@ -151,6 +179,33 @@ Maintain the authorized standard edition, certification scope, sites/activities,
 certification-body and accreditation-scope evidence, audit program, findings, and
 certificate status. A certificate is limited to its scope and is not a product or
 regulatory authorization.
+
+### Laboratory accreditation (ISO/IEC 17025, ISO 15189)
+
+Maintain the authorized standard edition, the scope of laboratory activities as
+declared and as accredited, per-location coverage, the accreditation body and its own
+recognition status, assessment history and findings with their closure evidence, and
+current accreditation status including any suspension or scope reduction.
+
+Additional controls specific to this lane:
+
+- **Claim control.** Record where accreditation symbols and endorsement wording may and
+  may not be used, and who authorizes each use. Work outside the accredited scope must
+  carry no accreditation claim. Since 2026-01-01 the recognition arrangement sits with
+  Global Accreditation Cooperation Incorporated — verify current wording rather than
+  reusing legacy ILAC MRA / IAF MLA phrasing.
+- **Scope-change control.** New methods, extended ranges, new locations, and new
+  authorized signatories are scope questions for the accreditation body, not only
+  internal change control. Keep the notification and approval records.
+- **Authorized signatories.** Maintain the current list, the scope each is authorized
+  for, and the competence evidence behind each authorization.
+- **Subcontracting and referral.** Record the provider, its own accreditation or
+  licensure status, the customer-notification basis, and how results are reported.
+
+For ISO 15189 specifically, keep CLIA, licensure, and payer evidence in a **separate**
+register. ISO 15189 accreditation does not satisfy CLIA, and blending the two produces
+a register that implies an equivalence that does not exist. See
+`references/iso-15189.md`.
 
 ### FDA QMSR
 
