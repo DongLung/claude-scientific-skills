@@ -27,9 +27,15 @@ import tempfile
 import unittest
 from pathlib import Path
 
-import numpy as np
+import pytest
 
 import skill_contract
+
+# The scripts import scipy indirectly through `_models`. Guarding here turns a
+# bare project-environment run into a clean skip instead of a pytest
+# INTERNALERROR; the real run is `tests/run_all.py --isolated pkpd-modeling`.
+np = pytest.importorskip("numpy", reason="pkpd-modeling needs numpy")
+pytest.importorskip("scipy", reason="pkpd-modeling needs scipy")
 
 SKILL_ROOT = Path(__file__).resolve().parents[2] / "skills" / "pkpd-modeling"
 SCRIPTS = SKILL_ROOT / "scripts"
