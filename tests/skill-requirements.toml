@@ -274,6 +274,9 @@ packages = [
 [skills.statistical-power]
 packages = ["statsmodels", "lifelines", "pingouin", "matplotlib", "numpy", "pandas", "scipy"]
 
+[skills.pkpd-modeling]
+packages = ["numpy", "scipy"]
+
 [skills.pymc]
 packages = ["pymc", "arviz", "matplotlib", "numpy", "pandas", "scikit-learn"]
 
