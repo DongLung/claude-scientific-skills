@@ -548,7 +548,7 @@ This repository contains **158 scientific and research skills** organized across
 - Diagrams: Scientific Schematics, Markdown & Mermaid Writing
 - Infographics: Infographics (10 types, 8 styles, colorblind-safe palettes)
 - Citations: Citation Management, pyzotero
-- Illustration: Generate Image (AI image generation with FLUX.2 Pro and Gemini 3.1 Flash Image Preview / Nano Banana 2)
+- Illustration: Generate Image (AI image generation with FLUX.2 Pro and Gemini 3.1 Flash Image / Nano Banana 2)
 
 #### 🔬 **Scientific Databases & Data Access** (10 skills → 100+ databases total)
 > A unified database-lookup skill provides deterministic REST API access to 78 public databases across all domains, with retrieval contracts, pagination/count reconciliation, and endpoint provenance. Dedicated skills cover specialized data platforms. Multi-database packages like BioServices (~40 bioinformatics services), BioPython (39 NCBI sub-databases via Entrez), and gget (20+ genomics databases) add further coverage.

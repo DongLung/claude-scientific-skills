@@ -620,6 +620,13 @@ class SlideImageInvocationTests(TemporaryDirectoryTestCase):
         self.assertEqual(clamped[clamped.index("--iterations") + 1], "1")
 
     def test_without_a_key_nothing_is_spawned(self) -> None:
+        # The wrapper also resolves a credential from any .env file at or above the
+        # working directory, so the temporary root stands in for a machine that has
+        # none -- otherwise a developer's own .env would satisfy the lookup.
+        origin = os.getcwd()
+        self.addCleanup(os.chdir, origin)
+        os.chdir(self.root)
+
         argv = ["generate_slide_image.py", "a slide", "-o", "s.png"]
         with mock.patch.object(sys, "argv", argv), \
              mock.patch.dict(os.environ, {}, clear=True), \
@@ -948,6 +955,10 @@ class AiCliValidationTests(TemporaryDirectoryTestCase):
             text=True,
             timeout=120,
             env=environment,
+            # The script resolves a credential from any .env file at or above the
+            # working directory. Running from the temporary root keeps a developer's
+            # real .env out of reach, so key=None genuinely means "no credential".
+            cwd=self.root,
         )
 
     def test_more_iterations_than_allowed_is_refused(self) -> None:
