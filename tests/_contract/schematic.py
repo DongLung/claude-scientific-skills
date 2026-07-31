@@ -1,9 +1,9 @@
 """Shared tests for the AI schematic generator bundled by several skills.
 
-`scientific-schematics`, `latex-posters`, `literature-review`,
-`citation-management`, and `scientific-slides` each ship a byte-identical
+`scientific-schematics`, `latex-posters`, `literature-review`, and
+`scientific-slides` each ship a byte-identical
 `scripts/generate_schematic.py` (a thin CLI) and `scripts/generate_schematic_ai.py`
-(the generator). Rather than write the same tests five times, each suite
+(the generator). Rather than write the same tests four times, each suite
 instantiates the factories below against its own copy; `tests/_meta` separately
 pins the copies together.
 

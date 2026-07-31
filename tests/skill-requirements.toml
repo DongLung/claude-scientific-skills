@@ -95,15 +95,12 @@ packages = ["matplotlib", "seaborn", "plotly", "pypdf", "pillow", "numpy"]
 # --- literature and research workflow -------------------------------------
 
 [skills.citation-management]
+# The BibTeX parsing, rendering, and validation layers are standard library
+# (scripts/_common.py). `requests` covers Crossref, PubMed, OpenAlex, and the
+# DataCite fallback; `scholarly` is needed only by search_google_scholar.py.
 packages = [
-    "bibtexparser",
-    "biopython",
-    "crossref-commons",
-    "pylatexenc",
-    "scholarly",
-    "selenium",
     "requests",
-    "python-dotenv",
+    "scholarly",
 ]
 
 [skills.pyzotero]
