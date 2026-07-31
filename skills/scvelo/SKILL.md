@@ -4,7 +4,7 @@ description: RNA velocity analysis with scVelo. Estimate cell state transitions 
 license: BSD-3-Clause
 compatibility: Requires Python 3.10+ with scvelo, scanpy, and anndata. Verified against scvelo 0.3.4, whose dynamical model and pl.scatter need pandas<3 and whose stochastic estimator needs numpy<2; the deterministic estimator works on current releases.
 metadata:
-  version: "1.1"
+  version: "1.2"
   skill-author: Kuan-lin Huang
 ---
 

@@ -4,7 +4,7 @@ description: Comprehensive citation management for academic research. Search Goo
 allowed-tools: Read Write Edit Bash
 license: MIT License
 metadata:
-  version: "1.7"
+  version: "1.8"
   skill-author: K-Dense Inc.
   openclaw:
     primaryEnv: OPENROUTER_API_KEY

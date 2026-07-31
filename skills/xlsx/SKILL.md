@@ -4,7 +4,7 @@ description: "Create, edit, analyze, or convert Excel spreadsheets (.xlsx, .xlsm
 allowed-tools: Read Write Edit Bash Grep Glob
 license: Proprietary. LICENSE.txt has complete terms
 metadata:
-  version: "2.1"
+  version: "2.2"
   skill-author: Anthropic, PBC
   adapted-by: K-Dense Inc.
   source: https://github.com/anthropics/skills/tree/main/skills/xlsx

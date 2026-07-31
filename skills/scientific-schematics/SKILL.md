@@ -4,7 +4,7 @@ description: Create publication-quality scientific diagrams using Nano Banana 2 
 allowed-tools: Read Write Edit Bash
 license: MIT license
 metadata:
-  version: "1.5"
+  version: "1.6"
   skill-author: K-Dense Inc.
   openclaw:
     primaryEnv: OPENROUTER_API_KEY
