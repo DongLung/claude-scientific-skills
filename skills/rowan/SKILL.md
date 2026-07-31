@@ -64,7 +64,7 @@ If that prints without error, you're set up correctly.
 
 ```bash
 uv pip install rowan-python
-# or: pip install rowan-python
+# or: uv pip install rowan-python
 ```
 
 ## User and webhook management

@@ -20,7 +20,7 @@ Molecular dynamics (MD) simulation computationally models the time evolution of 
 ```bash
 conda install -c conda-forge openmm mdanalysis nglview
 # or
-pip install openmm mdanalysis
+uv pip install openmm mdanalysis
 ```
 
 ## When to Use This Skill
@@ -421,7 +421,7 @@ def fix_pdb(input_pdb, output_pdb, ph=7.0):
 
 ```python
 # For ligand parameterization, use OpenFF toolkit or ACPYPE
-# pip install openff-toolkit
+# uv pip install openff-toolkit
 from openff.toolkit import Molecule, ForceField as OFFForceField
 from openff.interchange import Interchange
 

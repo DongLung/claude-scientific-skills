@@ -4,7 +4,7 @@ description: Comprehensive citation management for academic research. Search Goo
 allowed-tools: Read Write Edit Bash
 license: MIT License
 metadata:
-  version: "1.6"
+  version: "1.7"
   skill-author: K-Dense Inc.
   openclaw:
     primaryEnv: OPENROUTER_API_KEY
@@ -276,22 +276,22 @@ literature-review and Zotero/pyzotero export paths — are in
 
 ```bash
 # Core dependencies
-pip install requests  # HTTP requests for APIs
-pip install bibtexparser  # BibTeX parsing and formatting
-pip install biopython  # PubMed E-utilities access
+uv pip install requests  # HTTP requests for APIs
+uv pip install bibtexparser  # BibTeX parsing and formatting
+uv pip install biopython  # PubMed E-utilities access
 
 # Optional (for Google Scholar)
-pip install scholarly  # Google Scholar API wrapper
+uv pip install scholarly  # Google Scholar API wrapper
 # or
-pip install selenium  # For more robust Scholar scraping
+uv pip install selenium  # For more robust Scholar scraping
 ```
 
 ### Optional Tools
 
 ```bash
 # For advanced validation
-pip install crossref-commons  # Enhanced CrossRef API access
-pip install pylatexenc  # LaTeX special character handling
+uv pip install crossref-commons  # Enhanced CrossRef API access
+uv pip install pylatexenc  # LaTeX special character handling
 ```
 
 ### Where credentials are sent

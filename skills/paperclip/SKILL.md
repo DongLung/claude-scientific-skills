@@ -397,7 +397,7 @@ as `PAPERCLIP_API_KEY=gxl_...`, gitignore that file, and use the prefix from rul
 prefers OAuth, ask *them* to run `paperclip login` — it needs a browser and will not work from a tool
 call.
 
-Full matrix — pip/uv install, the hosted MCP server, per-client setup for Claude Code, Claude Desktop,
+Full matrix — uv install, the hosted MCP server, per-client setup for Claude Code, Claude Desktop,
 Codex, Cursor and Windsurf, auth precedence, and troubleshooting — is in
 [references/installation.md](references/installation.md).
 

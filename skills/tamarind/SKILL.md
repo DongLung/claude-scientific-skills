@@ -64,7 +64,7 @@ curl https://app.tamarind.bio/api/tools \
 
 **Base URL:** `https://app.tamarind.bio/api/`
 
-There is **no official Python SDK** — the PyPI package named `tamarind` is an unrelated Neo4j tool. Do not `pip install tamarind`. Write plain `requests` calls against the REST API (the endpoint shapes are in `openapi.yaml`), or use the MCP server for agent hosts.
+There is **no official Python SDK** — the PyPI package named `tamarind` is an unrelated Neo4j tool. Do not `uv pip install tamarind`. Write plain `requests` calls against the REST API (the endpoint shapes are in `openapi.yaml`), or use the MCP server for agent hosts.
 
 ## Two ways to call Tamarind
 

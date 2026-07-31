@@ -47,7 +47,7 @@ conda create -n nf -c bioconda -c conda-forge nextflow nf-core
 
 ```bash
 # nf-core tools (Python) for creating/linting/running nf-core assets
-pip install nf-core            # or: conda install -c bioconda nf-core
+uv pip install nf-core            # or: conda install -c bioconda nf-core
 nf-core --version
 ```
 

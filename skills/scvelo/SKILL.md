@@ -14,7 +14,7 @@ metadata:
 
 scVelo is the leading Python package for RNA velocity analysis in single-cell RNA-seq data. It infers cell state transitions by modeling the kinetics of mRNA splicing — using the ratio of unspliced (pre-mRNA) to spliced (mature mRNA) abundances to determine whether a gene is being upregulated or downregulated in each cell. This allows reconstruction of developmental trajectories and identification of cell fate decisions without requiring time-course data.
 
-**Installation:** `pip install scvelo`
+**Installation:** `uv pip install scvelo`
 
 **Key resources:**
 - Documentation: https://scvelo.readthedocs.io/

@@ -61,7 +61,8 @@ packages = ["requests", "python-dotenv"]
 packages = ["requests", "python-dotenv"]
 
 [skills.generate-image]
-packages = ["requests"]
+# The bundled CLI is standard-library only, and a test enforces that.
+packages = []
 
 [skills.markdown-mermaid-writing]
 packages = []
@@ -86,7 +87,7 @@ packages = [
 ]
 
 [skills.scientific-schematics]
-packages = ["schemdraw", "matplotlib", "requests", "python-dotenv"]
+packages = ["requests", "python-dotenv"]
 
 [skills.scientific-visualization]
 packages = ["matplotlib", "seaborn", "plotly", "pypdf", "pillow", "numpy"]

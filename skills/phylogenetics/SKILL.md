@@ -22,11 +22,11 @@ Phylogenetic analysis reconstructs the evolutionary history of biological sequen
 ```bash
 # Conda (recommended for CLI tools)
 conda install -c bioconda mafft iqtree fasttree
-pip install ete3
+uv pip install ete3
 
 # ete3's TreeStyle/NodeStyle rendering lives in its Qt backend, so image output
 # needs PyQt5 as well; tree parsing and statistics work without it.
-pip install PyQt5
+uv pip install PyQt5
 ```
 
 ## When to Use This Skill

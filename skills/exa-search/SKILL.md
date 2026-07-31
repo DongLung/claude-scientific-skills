@@ -77,7 +77,7 @@ First, check if a `.env` file exists in the project root and contains `EXA_API_K
 dotenv -f .env run -- uv run --with exa-py python "$SKILL_PATH/scripts/exa_search.py" "your query"
 ```
 
-If `dotenv` isn't available, install it: `pip install python-dotenv[cli]` or `uv pip install python-dotenv[cli]`.
+If `dotenv` isn't available, install it: `uv pip install python-dotenv[cli]`.
 
 If there's no `.env`, export the key for the session:
 

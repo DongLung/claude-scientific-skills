@@ -231,7 +231,7 @@ GlycoShield-MD analyzes how glycans shield protein surfaces during MD simulation
 
 ```bash
 # Installation
-pip install glycoshield
+uv pip install glycoshield
 
 # Basic usage: analyze glycan shielding from glycosylated protein MD trajectory
 glycoshield \

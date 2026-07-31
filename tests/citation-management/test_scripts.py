@@ -27,6 +27,13 @@ import format_bibtex  # noqa: E402
 import validate_citations  # noqa: E402
 
 SchematicTests = skill_contract.schematic.schematic_test_case(SKILL_ROOT)
+ReviewParsingTests = skill_contract.schematic.review_parsing_test_case(
+    SCRIPTS, "generate_schematic_ai"
+)
+ReviewFailureTests = skill_contract.schematic.review_failure_test_case(
+    SCRIPTS, "generate_schematic_ai", "ScientificSchematicGenerator",
+    ("diagram.png", "a prompt", 1, "journal", 2),
+)
 
 BIBLIOGRAPHY = """\
 @article{jumper2021,

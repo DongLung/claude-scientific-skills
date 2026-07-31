@@ -340,10 +340,10 @@ When your genomics workloads outgrow single-node processing, TileDB-Cloud provid
 **2. Install TileDB-Cloud Python Client**
 ```bash
 # Base installation
-pip install tiledb-cloud
+uv pip install tiledb-cloud
 
 # With genomics-specific functionality
-pip install tiledb-cloud[life-sciences]
+uv pip install tiledb-cloud[life-sciences]
 ```
 
 **3. Configure Authentication**
