@@ -21,8 +21,10 @@ A LoRA-adapted pathology foundation backbone (Midnight) tokenises the tile. A
 cross-attention gene decoder lets each gene query attend to the patch tokens, and a gene
 router hypernetwork builds gene-specific projections from frozen biological embeddings
 (Evo 2, Orthrus, ProtT5, scGPT, Apertus). Genes enter the model as queryable embeddings
-rather than fixed output slots, so coverage spans the protein-coding transcriptome
-including genes unseen in training.
+rather than fixed output slots, so the released model covers a ~19k protein-coding gene
+panel including genes unseen in training. The panel ships with the weights as
+`tokens.csv` and is exposed as `model.gene_names`; genes outside it cannot be queried in
+this release.
 
 Applied to TCGA, the model produced a virtual spatial transcriptomics atlas of 28,664
 slides across 32 cancer types.
@@ -35,7 +37,7 @@ noncommercial research and check both licences before redistributing outputs.
 ## Installation
 
 ```bash
-uv pip install deepspotm
+uv pip install deepspotm==1.0.0
 ```
 
 Version 1.0.0 targets Python 3.10 to 3.13 and pulls in PyTorch. Install the PyTorch build
@@ -67,7 +69,9 @@ vals = model.predict_genes(image_processor(pil_tile).unsqueeze(0), ["EPCAM", "CD
 `pil_tile` is a PIL image of exactly 224x224 pixels. `image_processor` turns it into a
 tensor, `unsqueeze(0)` adds the batch dimension, and `predict_genes` takes the batch plus a
 list of HGNC gene symbols. Values come back in log1p-CPM, aligned with the gene list you
-passed, so keep that list beside the output to keep the columns labelled.
+passed, so keep that list beside the output to keep the columns labelled. Symbols must be
+in the released ~19k-gene panel (`model.gene_names`); an unknown symbol raises `KeyError`
+naming the offending genes.
 
 ## Tile requirements
 
@@ -100,7 +104,7 @@ an `ImportError` into a message that names every step:
 
 ```python
 DEEPSPOTM_HELP = (
-    "DeepSpot-M is unavailable. Install it with `uv pip install deepspotm`, request "
+    "DeepSpot-M is unavailable. Install it with `uv pip install deepspotm==1.0.0`, request "
     "access to the gated weights at https://huggingface.co/ratschlab/DeepSpotM, then "
     "authenticate with `huggingface-cli login`."
 )
@@ -150,7 +154,8 @@ worked loop, batch sizing and an `AnnData` assembly step.
 
 - Spatial expression maps for marker genes across a tumour section.
 - Transcriptome-wide prediction over a slide cohort with no matching assay run.
-- Querying genes outside any fixed spatial panel, including genes unseen in training.
+- Querying any of the ~19k panel genes by symbol, including genes unseen in training —
+  far beyond the few hundred genes of a typical spatial assay panel.
 - Adding an expression channel to a morphology-only histology pipeline.
 - Building a slide-level cohort atlas, as done for TCGA.
 

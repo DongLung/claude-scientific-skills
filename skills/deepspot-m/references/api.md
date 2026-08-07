@@ -48,12 +48,12 @@ values stay comparable. When the choice matters to a conclusion, run the same ti
 through several sources and report the values side by side:
 
 ```python
-tiles = torch.stack([image_processor(require_tile(t)) for t in pil_tiles])
 genes = ["EPCAM", "CD3D", "PTPRC"]
 
 per_source = {}
 for source in ("scgpt", "prott5", "evo2"):
     model, image_processor = DeepSpotM.from_pretrained("ratschlab/DeepSpotM", source=source)
+    tiles = torch.stack([image_processor(require_tile(t)) for t in pil_tiles])
     per_source[source] = model.predict_genes(tiles, genes)
 ```
 
@@ -72,7 +72,20 @@ symbols. A single tile still needs the batch dimension, which is what `unsqueeze
 ### Gene symbols
 
 Pass HGNC gene symbols as uppercase strings, for example `EPCAM`, `CD3D`, `PTPRC`,
-`MKI67`. Two habits keep a run reproducible:
+`MKI67`. The queryable genes are the ~19k-symbol panel shipped with the weights as
+`tokens.csv`, exposed on the loaded model as `model.gene_names`. A symbol outside that
+panel raises `KeyError` naming the offending genes, and predicting genes outside the
+panel is not part of this release. Check membership up front when a gene list comes from
+elsewhere:
+
+```python
+panel = set(model.gene_names)
+missing = [g for g in genes if g not in panel]
+if missing:
+    raise ValueError(f"Not in the DeepSpot-M panel: {missing}")
+```
+
+Two habits keep a run reproducible:
 
 - Map aliases to current HGNC symbols before querying, so `CD45` becomes `PTPRC`. Reading
   the list from a file keeps the mapping visible in the run.
@@ -104,18 +117,19 @@ one call, so lower one when the other is large.
 
 ## Device placement
 
-DeepSpot-M is a PyTorch model, so the usual handling applies. Move the model once, put
-each batch on the same device, and predict under `torch.no_grad()`:
+`from_pretrained` accepts a `device` argument and returns the model already in eval mode
+on that device, and `predict_genes` runs under `no_grad` on its own. So device handling
+is one argument plus putting each batch on the same device:
 
 ```python
 import torch
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
-model = model.to(device)
-model.eval()
+model, image_processor = DeepSpotM.from_pretrained(
+    "ratschlab/DeepSpotM", source="scgpt", device=device
+)
 
-with torch.no_grad():
-    vals = model.predict_genes(batch.to(device), genes)
+vals = model.predict_genes(batch.to(device), genes)
 ```
 
 Keeping the model on the device across batches is what makes a slide-scale run practical.
@@ -145,7 +159,7 @@ still pending. Report the whole path back to a working call rather than the raw 
 
 ```python
 DEEPSPOTM_HELP = (
-    "DeepSpot-M is unavailable. Install it with `uv pip install deepspotm`, request "
+    "DeepSpot-M is unavailable. Install it with `uv pip install deepspotm==1.0.0`, request "
     "access to the gated weights at https://huggingface.co/ratschlab/DeepSpotM, then "
     "authenticate with `huggingface-cli login`."
 )

@@ -76,20 +76,19 @@ def batched(items, size):
     for start in range(0, len(items), size):
         yield items[start : start + size]
 
-model, image_processor = DeepSpotM.from_pretrained("ratschlab/DeepSpotM", source="scgpt")
 device = "cuda" if torch.cuda.is_available() else "cpu"
-model = model.to(device)
-model.eval()
+model, image_processor = DeepSpotM.from_pretrained(
+    "ratschlab/DeepSpotM", source="scgpt", device=device
+)
 
 genes = ["EPCAM", "CD3D", "PTPRC", "MKI67"]
 tile_paths = sorted(Path("tiles/").glob("*.png"))
 
 chunks = []
-with torch.no_grad():
-    for paths in batched(tile_paths, 32):
-        tiles = [require_tile(Image.open(p)) for p in paths]
-        batch = torch.stack([image_processor(t) for t in tiles]).to(device)
-        chunks.append(model.predict_genes(batch, genes).cpu())
+for paths in batched(tile_paths, 32):
+    tiles = [require_tile(Image.open(p)) for p in paths]
+    batch = torch.stack([image_processor(t) for t in tiles]).to(device)
+    chunks.append(model.predict_genes(batch, genes).cpu())
 
 expression = torch.cat(chunks).numpy()  # tiles by genes, log1p-CPM
 ```
