@@ -12,16 +12,6 @@
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-K--Dense_Inc.-0A66C2?logo=linkedin)](https://www.linkedin.com/company/k-dense-inc)
 [![YouTube](https://img.shields.io/badge/YouTube-K--Dense_Inc.-FF0000?logo=youtube)](https://www.youtube.com/@K-Dense-Inc)
 
-## Star History
-
-<a href="https://www.star-history.com/?repos=K-Dense-AI%2Fscientific-agent-skills&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=K-Dense-AI/scientific-agent-skills&type=date&theme=dark&legend=top-left&sealed_token=rL_5GLS9f4Fbyr1_VYZLGMF-8Rr6ZlWNaYNecajc52QSQq6KL7HrzSea_tGQGy1mBMXgVvAUMSIYAc0w39si9v5Up1RIw74-UDGZg_9HvH_chiyS0Njf-5tebtPh1LJjXTG6mH5Iv2pMJNivgfPsyB-oOgbaIV3uSc7DzSeZFCTE4WOcHX4y2BR76k5g" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=K-Dense-AI/scientific-agent-skills&type=date&legend=top-left&sealed_token=rL_5GLS9f4Fbyr1_VYZLGMF-8Rr6ZlWNaYNecajc52QSQq6KL7HrzSea_tGQGy1mBMXgVvAUMSIYAc0w39si9v5Up1RIw74-UDGZg_9HvH_chiyS0Njf-5tebtPh1LJjXTG6mH5Iv2pMJNivgfPsyB-oOgbaIV3uSc7DzSeZFCTE4WOcHX4y2BR76k5g" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=K-Dense-AI/scientific-agent-skills&type=date&legend=top-left&sealed_token=rL_5GLS9f4Fbyr1_VYZLGMF-8Rr6ZlWNaYNecajc52QSQq6KL7HrzSea_tGQGy1mBMXgVvAUMSIYAc0w39si9v5Up1RIw74-UDGZg_9HvH_chiyS0Njf-5tebtPh1LJjXTG6mH5Iv2pMJNivgfPsyB-oOgbaIV3uSc7DzSeZFCTE4WOcHX4y2BR76k5g" />
- </picture>
-</a>
-
 > **🔔 Claude Scientific Skills is now Scientific Agent Skills.** Same skills, broader compatibility — now works with any AI agent that supports the open [Agent Skills](https://agentskills.io/) standard, not just Claude.
 
 > **New: [K-Dense BYOK](https://github.com/K-Dense-AI/k-dense-byok)** — A free, open-source AI co-scientist that runs on your desktop, powered by Scientific Agent Skills. Bring your own API keys, pick from 40+ models, and get a full research workspace with web search, file handling, 100+ scientific databases, and access to all 161 skills in this repo. Your data stays on your computer, and you can optionally scale to cloud compute via [Modal](https://modal.com/) for heavy workloads. [Get started here.](https://github.com/K-Dense-AI/k-dense-byok)
